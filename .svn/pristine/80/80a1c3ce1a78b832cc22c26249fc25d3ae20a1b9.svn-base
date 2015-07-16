@@ -1,0 +1,5 @@
+package com.zgrjb.find.config;
+
+public class suggest {
+//可以存放所有资源文件的相对路径
+}

@@ -1,0 +1,134 @@
+package com.zgrjb.find.ui;
+
+import java.util.ArrayList;
+
+import com.zgrjb.find.R;
+import com.zgrjb.find.ui.fragment.DiscoverFragment;
+import com.zgrjb.find.ui.fragment.ContactsFragment;
+import com.zgrjb.find.ui.fragment.RecentFragment;
+
+import android.app.Activity;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.os.Message;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
+
+public class MainUIActivity extends FragmentActivity {
+	
+		private ArrayList<PagerItem>pagerItems;
+		private ViewPager viewPager;
+		
+		private MainAdapter adapter;
+		private RadioGroup radioGroup;
+		public int position;
+		@Override
+		protected void onCreate(Bundle savedInstanceState) {
+			super.onCreate(savedInstanceState);
+			setContentView(R.layout.main_ui_activity);
+			initPageItem();
+			initRadioGroup();
+			initPageList();
+		}
+		
+		private void initPageItem(){
+			pagerItems = new ArrayList<MainUIActivity.PagerItem>();
+			pagerItems.add(new PagerItem((RadioButton)findViewById(R.id.main_message),new RecentFragment()));
+			pagerItems.add(new PagerItem((RadioButton)findViewById(R.id.main_discorver),new DiscoverFragment()));
+			pagerItems.add(new PagerItem((RadioButton)findViewById(R.id.main_mailList),new ContactsFragment()));
+		}
+		
+		private void initRadioGroup() {
+			radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
+			radioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+				@Override
+				public void onCheckedChanged(RadioGroup arg0, int checkedId) {
+					for (int i = 0; i < pagerItems.size(); i++) {
+						pagerItems.get(i).radioButton.setBackgroundColor(Color.alpha(0));
+						if (pagerItems.get(i).radioButton.getId() == checkedId) {
+							pagerItems.get(i).radioButton.setBackgroundColor(Color.BLACK);
+							pagerItems.get(i).radioButton.getBackground().setAlpha(20);
+							viewPager.setCurrentItem(i);
+							
+						}
+					}
+
+				}
+			});
+		}
+
+
+		public void initPageList() {
+			viewPager = (ViewPager) findViewById(R.id.viewPage);
+			adapter = new MainAdapter(getSupportFragmentManager());
+			viewPager.setAdapter(adapter);
+			viewPager.setOnPageChangeListener(new OnPageChangeListener() {
+
+				@Override
+				public void onPageSelected(int arg0) {
+					int i = 0;
+					for (PagerItem items : pagerItems) {
+						if (i == arg0) {
+							pagerItems.get(i).radioButton.setChecked(true);
+						} else {
+							pagerItems.get(i).radioButton.setChecked(false);
+						}
+						i++;
+					}
+				}
+
+				@Override
+				public void onPageScrolled(int arg0, float arg1, int arg2) {
+
+				}
+
+				@Override
+				public void onPageScrollStateChanged(int arg0) {
+
+				}
+			});
+
+		}
+
+		public class MainAdapter extends FragmentPagerAdapter {
+
+
+			public MainAdapter(FragmentManager fm) {
+				super(fm);
+			}
+
+			@Override
+			public android.support.v4.app.Fragment getItem(int arg0) {
+				position = arg0;
+				return pagerItems.get(arg0).fragment;
+			}
+
+			@Override
+			public int getCount() {
+				// TODO Auto-generated method stub
+				return pagerItems.size();
+			}
+
+		}
+
+		public class PagerItem{
+			public RadioButton radioButton;
+			public android.support.v4.app.Fragment fragment;
+			
+			public PagerItem(RadioButton radioButton,android.support.v4.app.Fragment fragment){
+					this.radioButton =radioButton;
+					this.fragment=fragment;
+			}
+			
+			
+		}
+		
+		
+}

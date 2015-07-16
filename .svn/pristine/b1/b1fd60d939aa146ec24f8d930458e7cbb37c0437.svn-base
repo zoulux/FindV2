@@ -1,0 +1,7 @@
+package com.zgrjb.find.bean;
+
+import android.R.integer;
+
+public class FlagData {
+		public int potoData=0;
+}

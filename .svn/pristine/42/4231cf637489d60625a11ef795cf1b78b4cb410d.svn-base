@@ -1,0 +1,137 @@
+package com.zgrjb.find.ui;
+
+
+import com.zgrjb.find.R;
+import com.zgrjb.find.accelerator.BaseAccelerator;
+import com.zgrjb.find.accelerator.ShakeListener;
+import com.zgrjb.find.accelerator.ShakeListener.OnShakeListener;
+
+import android.R.integer;
+import android.content.Intent;
+import android.os.Handler;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.Toast;
+
+public class ShackActivity extends BaseAccelerator {
+	private Button button;
+	private LinearLayout p1;
+	private LinearLayout p2;
+	int flag=0;
+	private long exitTime = 0;
+	
+	private ShakeListener accelerator = null;
+@Override
+public void setContentView() {
+	setContentView(R.layout.main_ui_discover_fragment_shack_activity);
+	button = (Button)this.findViewById(R.id.button1);
+	p1 = (LinearLayout)this.findViewById(R.id.p1);
+	p2 = (LinearLayout)this.findViewById(R.id.p2);
+	button.setOnClickListener(new OnClickListener() {
+		
+		@Override
+		public void onClick(View v) {
+			   p1.startAnimation(AnimationUtils.loadAnimation(ShackActivity.this,R.anim.pgtranslate));
+			   p2.startAnimation(AnimationUtils.loadAnimation(ShackActivity.this,R.anim.pgtranslate2));
+		}
+	});
+	transForAccelerator();
+	
+}
+@Override
+public int getRadomWordNumber() {
+	// TODO Auto-generated method stub
+	return 0;
+}
+@Override
+public void transForAccelerator() {
+	accelerator = new ShakeListener(this);
+	
+	accelerator.setOnShakeListener(new OnShakeListener() {
+		
+		int t=0;
+		@Override
+		public void onShake() {
+			accelerator.stop();
+			p1.startAnimation(AnimationUtils.loadAnimation(ShackActivity.this,R.anim.pgtranslate));
+			p2.startAnimation(AnimationUtils.loadAnimation(ShackActivity.this,R.anim.pgtranslate2));
+			
+			if ((System.currentTimeMillis() - exitTime) > 100000) {
+				Toast.makeText(getApplicationContext(), "再按一次退出程序",
+						Toast.LENGTH_SHORT).show();
+				new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					
+						
+						Intent intent = new Intent(ShackActivity.this,SearchInMapActivity.class);
+						startActivity(intent);
+						ShackActivity.this.finish();
+					}
+					
+					
+				
+			}, 5000);
+				
+//				Intent intent = new Intent(ShackActivity.this,SearchInMapActivity.class);
+//				startActivity(intent);
+//				ShackActivity.this.finish();
+//				 accelerator.start();
+				exitTime = System.currentTimeMillis();
+			} else {
+				//finish();
+				
+				// finishActivityFromChild(WordFragment, requestCode)
+				// System.getSecurityManager().getThreadGroup().stop();
+			}
+			
+//			new Handler().postDelayed(new Runnable() {
+//				@Override
+//				public void run() {
+//					++t;
+//					Toast.makeText(ShackActivity.this, t+">>>", 1).show();
+//					if (t==1) {
+						//t+=1000;
+						
+//						Intent intent = new Intent(ShackActivity.this,SearchInMapActivity.class);
+//						startActivity(intent);
+//						ShackActivity.this.finish();
+//					}
+					
+					
+//				}
+//			}, 3000);
+			
+			flag++;
+			
+			
+		}
+		
+		
+	});
+	
+	
+}
+@Override  
+protected void onDestroy() {  
+    super.onDestroy();  
+    if (accelerator != null) {  
+        accelerator.stop();  
+    }  
+}  
+
+//@Override
+//protected void onResume() {
+//	super.onResume();
+//	accelerator.start();
+//}
+//
+//@Override
+//protected void onPause() {
+//	super.onPause();
+//	accelerator.stop();
+//}
+}

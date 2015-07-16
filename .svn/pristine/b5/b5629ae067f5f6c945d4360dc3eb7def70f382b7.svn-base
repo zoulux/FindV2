@@ -1,0 +1,25 @@
+package com.zgrjb.find.accelerator;
+import android.app.Activity;
+import android.os.Bundle;
+
+public abstract class BaseAccelerator extends Activity {
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		init();
+	}
+
+	private void init() {
+		getRadomWordNumber();
+		transForAccelerator();
+		setContentView();
+	}
+
+	public abstract void setContentView();
+
+	public abstract int getRadomWordNumber();
+
+	public abstract void transForAccelerator();
+
+}

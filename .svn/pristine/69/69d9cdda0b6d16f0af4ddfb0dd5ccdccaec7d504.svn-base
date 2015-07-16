@@ -1,0 +1,170 @@
+package com.zgrjb.find.ui;
+import java.io.File;
+import java.io.IOException;
+
+import com.zgrjb.find.R;
+import com.zgrjb.find.bean.FlagData;
+import com.zgrjb.find.file_handle.HandleFile;
+
+import android.R.integer;
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+public class LogInActivity extends BaseActivity implements OnClickListener {
+	private ImageView logInImageView;
+	private EditText userLogIneEditText;
+	private EditText passwordLogInEditText;
+	private Button LogInBt;
+	private TextView newUserTextView;
+	private ImageView titleLeftImageView;
+	private HandleFile handleFile;
+	private Bitmap photo;
+
+	private static final int PHOTO_REQUEST_TAKEPHOTO = 1;// 拍照
+	private static final int PHOTO_REQUEST_CUT = 2;// 结果
+
+	private File tempFile= new File(Environment
+			.getExternalStorageDirectory(),"/Find/Picture_Regist/p1.jpg/");
+	private final static String ALBUM_PATH = Environment
+			.getExternalStorageDirectory() + "/Find/Picture_Regist/";
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_login);
+		showTitleText("登录");
+		setDrawablePath(getResources().getDrawable(R.drawable.ic_launcher));
+		leftButtonIsVisible(true);
+		init();
+		File file = new File("sdcard/Find/Picture_Regist");
+        if (!file.exists()) {
+        	file.mkdirs();
+		}
+		
+		titleLeftImageView = (ImageView) findViewById(R.id.leftImageView);
+		titleLeftImageView.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				ShowToast(">>>>");
+			}
+		});
+		
+	}
+
+	private void init() {
+		logInImageView = (ImageView) this.findViewById(R.id.loginImageView);
+		userLogIneEditText = (EditText) this
+				.findViewById(R.id.userLogInEditText);
+		passwordLogInEditText = (EditText) this
+				.findViewById(R.id.passWordLoginEditText);
+		newUserTextView = (TextView) findViewById(R.id.newUserTextView);
+		LogInBt = (Button) this.findViewById(R.id.logInBt);
+		newUserTextView.setOnClickListener(this);
+		LogInBt.setOnClickListener(this);
+		handleFile = new HandleFile(this, ALBUM_PATH);
+		logInImageView.setImageBitmap(getBitmap(this, ALBUM_PATH + "p1.jpg"));
+
+	}
+
+	public static Bitmap getBitmap(Context context, String resName) {
+		try {
+			return BitmapFactory.decodeFile(resName);
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch (requestCode) {
+		case PHOTO_REQUEST_TAKEPHOTO:// 选择拍照时调用
+			startPhotoZoom(Uri.fromFile(tempFile));
+			break;
+		case PHOTO_REQUEST_CUT:
+
+			sentPicToNext(data);
+			Intent intent = new Intent(this, RegistActivity.class);
+			startActivity(intent);
+			finish();
+
+			break;
+		}
+		super.onActivityResult(requestCode, resultCode, data);
+	}
+
+	/**
+	 * 开始裁切图片
+	 * 
+	 * @param uri
+	 */
+	private void startPhotoZoom(Uri uri) {
+		Intent intent = new Intent("com.android.camera.action.CROP");
+		intent.setDataAndType(uri, "image/*");
+		// crop为true是设置在开启的intent中设置显示的view可以剪裁
+		intent.putExtra("crop", "true");
+		// aspectX aspectY 是宽高的比例
+		intent.putExtra("aspectX", 1);
+		intent.putExtra("aspectY", 1);
+		intent.putExtra("scale", true);
+		// outputX,outputY 是剪裁图片的宽高
+		intent.putExtra("outputX", 200);
+		intent.putExtra("outputY", 200);
+		
+		intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+		intent.putExtra("return-data", true);
+		intent.putExtra("noFaceDetection", true);
+		startActivityForResult(intent, PHOTO_REQUEST_CUT);
+	}
+
+	@Override
+	public void onClick(View v) {
+		if (v == LogInBt) {
+			Intent intent = new Intent(this, MainUIActivity.class);
+			startActivity(intent);
+			finish();
+		} else if (v == newUserTextView) {
+			takePhotos();
+			// Intent intent =new Intent(this,RegistActivity.class);
+			// startActivity(intent);
+			// finish();
+		}
+
+	}
+
+	public void takePhotos() {
+		Intent cameraintent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+		// 指定调用相机拍照后照片的储存路径
+		cameraintent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(tempFile));
+		startActivityForResult(cameraintent, PHOTO_REQUEST_TAKEPHOTO);
+	}
+
+	private void sentPicToNext(Intent picdata) {
+		Bundle bundle = picdata.getExtras();
+		if (bundle != null) {
+			photo = bundle.getParcelable("data");
+			try {
+				//tempFile.createTempFile(prefix, suffix)
+				handleFile.savePictureFile(photo, "p1.jpg");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+		}
+	}
+}

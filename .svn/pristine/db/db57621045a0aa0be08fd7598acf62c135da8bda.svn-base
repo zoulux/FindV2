@@ -1,0 +1,27 @@
+package com.zgrjb.find.ui;
+
+import com.zgrjb.find.R;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.Toast;
+
+public class SearchInMapActivity extends BaseActivity{
+	private Button button;
+	   @Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.search_in_map);
+		button = (Button)this.findViewById(R.id.button1);
+		button.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				   Toast.makeText(SearchInMapActivity.this,">>>", 1).show();
+			}
+		});
+	}
+}

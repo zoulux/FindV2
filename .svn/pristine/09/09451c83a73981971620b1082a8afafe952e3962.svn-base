@@ -1,0 +1,5 @@
+package com.zgrjb.find.bean;
+
+public class suggest {
+//存放数据集
+}

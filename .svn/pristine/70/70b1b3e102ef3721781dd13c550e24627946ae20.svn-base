@@ -1,0 +1,54 @@
+package com.zgrjb.find.ui;
+
+
+
+import com.zgrjb.find.R;
+
+import android.support.v4.app.Fragment;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.View.OnClickListener;
+import android.widget.LinearLayout;
+import android.widget.Toast;
+
+public class DiscoverFragment extends Fragment implements OnClickListener{
+	private LinearLayout shakeHandlLayout;
+	private LinearLayout goodThemeLayout;
+	private LinearLayout playGameLayout;
+	private View rooView;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+	}
+
+	private void init() {
+		shakeHandlLayout = (LinearLayout) rooView.findViewById(R.id.shackhand);
+		goodThemeLayout = (LinearLayout) rooView.findViewById(R.id.goodTheme);
+		playGameLayout = (LinearLayout) rooView.findViewById(R.id.playGame);
+		shakeHandlLayout.setOnClickListener(DiscoverFragment.this);
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		rooView = inflater.inflate(R.layout.main_ui_discover_fragment,
+				container, false);
+		init();
+
+		return rooView;
+	}
+
+	@Override
+	public void onClick(View v) {
+			if (v==shakeHandlLayout) {
+				Intent intent = new Intent(DiscoverFragment.this.getActivity(),ShackActivity.class);
+				startActivity(intent);
+			}
+	}
+
+}

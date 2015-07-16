@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:lyman="http://schemas.android.com/apk/res/com.zgrjb.find"
+    android:id="@+id/main_bg"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/theme_bgbg" >
+
+    <com.zgrjb.find.ui.SlidingMenu
+        android:id="@+id/id_menu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        lyman:rightPading="100dp" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal" >
+
+            <include layout="@layout/left_menu" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical" >
+
+                <include layout="@layout/include_actionbar" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" >
+
+                    <android.support.v4.view.ViewPager
+                        android:id="@+id/viewPage"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentTop="true" >
+                    </android.support.v4.view.ViewPager>
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@android:color/background_dark" />
+
+                <LinearLayout
+                    android:id="@+id/id_linerLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="4" >
+
+                    <RadioGroup
+                        android:id="@+id/radioGroup"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/theme_bg_defualt"
+                        android:orientation="horizontal" >
+
+                        <RadioButton
+                            android:id="@+id/bt_main_recent"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="#16000000"
+                            android:button="@null"
+                            android:checked="true"
+                            android:drawableTop="@drawable/recent"
+                            android:gravity="center"
+                            android:padding="5dp"
+                            android:paddingTop="15dp"
+                            android:text="@string/main_radioButtonText_message"
+                            android:textColor="@android:color/background_light" />
+
+                        <RadioButton
+                            android:id="@+id/bt_main_discover"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:button="@null"
+                            android:checked="false"
+                            android:drawableTop="@drawable/discover"
+                            android:gravity="center"
+                            android:padding="5dp"
+                            android:paddingTop="13dp"
+                            android:text="@string/main_radioButtonText_discover"
+                            android:textColor="@android:color/background_light" />
+
+                        <RadioButton
+                            android:id="@+id/bt_main_contact"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:button="@null"
+                            android:checked="false"
+                            android:drawableTop="@drawable/contact"
+                            android:gravity="center"
+                            android:padding="5dp"
+                            android:paddingTop="13dp"
+                            android:text="@string/main_radioButtonText_maillist"
+                            android:textColor="@android:color/background_light" />
+                    </RadioGroup>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </com.zgrjb.find.ui.SlidingMenu>
+
+</RelativeLayout>

@@ -1,0 +1,28 @@
+package com.zgrjb.find.ui;
+
+import java.util.zip.Inflater;
+
+import com.zgrjb.find.R;
+
+import android.support.v4.app.Fragment;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+public class MessageFragment extends Fragment {
+	
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+	// TODO Auto-generated method stub
+	super.onCreate(savedInstanceState);
+	}
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container,
+				Bundle savedInstanceState) {
+			View rooView = inflater.inflate(R.layout.main_ui_recent_fragment, container,false);
+			
+			
+			return rooView;
+		}
+}

@@ -1,0 +1,100 @@
+package com.zgrjb.find.ui;
+
+import java.util.zip.Inflater;
+
+import com.zgrjb.find.R;
+import com.zgrjb.find.view.HeaderLayout;
+
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.opengl.Visibility;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+public class BaseActivity extends Activity{
+	private TextView textView;
+	private ImageView leftImageView;
+	private ImageView rightImageView;
+	private Drawable drawable;
+	private onLeftImageViewClickListener mOnLeftImageViewClickListener;
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+	}
+	
+	
+	
+	Toast mToast;
+	public void ShowToast(final int resId) {
+		runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				if (mToast == null) {
+					mToast = Toast.makeText(BaseActivity.this.getApplicationContext(), resId,
+							Toast.LENGTH_LONG);
+				} else {
+					mToast.setText(resId);
+				}
+				mToast.show();
+			}
+		});
+	}
+	
+	public void ShowToast(final String string) {
+		runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				if (mToast == null) {
+					mToast = Toast.makeText(BaseActivity.this.getApplicationContext(), string,
+							Toast.LENGTH_LONG);
+				} else {
+					mToast.setText(string);
+				}
+				mToast.show();
+			}
+		});
+	}
+	@SuppressLint("NewApi")
+	public void leftButtonIsVisible(boolean b){
+		   if (b) {
+			   
+			leftImageView = (ImageView)findViewById(R.id.leftImageView);
+			leftImageView.setVisibility(0);//œ‘ æ
+			leftImageView.setImageDrawable(drawable);
+		   }
+		
+		
+	}
+	public void titleLeftImageView(){
+		
+	}
+	public void setDrawablePath(Drawable drawable){
+		this.drawable =drawable;
+	}
+	public void setOnLeftImageViewClickListener(onLeftImageViewClickListener listener){
+		mOnLeftImageViewClickListener =listener;
+	}
+	public interface onLeftImageViewClickListener{
+		  void onclick();
+ 	}
+	public void showTitleText(String text){
+		ShowToast(text.toString());
+		textView = (TextView)findViewById(R.id.titleText);
+		textView.setText(text);
+	}
+}

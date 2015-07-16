@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Find</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="main_radioButtonText_message">消息</string>
+    <string name="main_radioButtonText_discover">发现</string>
+    <string name="main_radioButtonText_maillist">通讯录</string>
+    <string name="login_bt_name">登录</string>
+    <string name="login_new_user">新用户</string>
+    <string name="guide_text_1">Welcome To Find</string>
+    <string name="guide_text_2">在这里，你可以Find传统与现代的结合</string>
+    <string name="guide_text_3">在这里，你可以Find属于自己的主题</string>
+    <string name="guide_text_4">在这里，你可以Find好玩的小游戏</string>
+    <string name="guide_text_5">在这里，你还可以Find附近的他（她）哦！</string>
+    <string name="guide_text_6">他（她）或许都在哦！还等什么</string>
+    <string name="activity_chat_textview">向上滑動，取消發送</string>
+    <string name="activity_choice_avertar_image_Button1_text">照相</string>
+    <string name="activity_choice_avertar_image_Button2_text">从相册中选择</string>
+    <string name="activity_choice_theme_Button1_text">暖咖啡</string>
+    <string name="activity_choice_theme_Button2_text">清新绿</string>
+    <string name="activity_choice_theme_Button3_text">自然蓝</string>
+    <string name="activity_choice_theme_Button4_text">夕阳红</string>
+    <string name="activity_friends_data_TextView1_text">好友头像</string>
+    <string name="activity_friends_data_TextView2_text">好友昵称</string>
+    <string name="activity_friends_data_TextView3_text">123</string>
+    <string name="activity_friends_data_TextView4_text">好友年龄</string>
+    <string name="activity_friends_data_TextView5_text">12</string>
+    <string name="activity_friends_data_TextView6_text">好友性别</string>
+    <string name="activity_friends_data_TextView7_text">ja</string>
+    <string name="activity_friends_data_Button">删除好友</string>
+    <string name="activity_regist_TextView_text">用户名</string>
+    <string name="activity_regist_TextView2_text">昵称</string>
+    <string name="activity_regist_TextView3_text">密码</string>
+    <string name="activity_regist_TextView4_text">重复密码</string>
+    <string name="activity_regist_TextView5_text">性别</string>
+    <string name="activity_regist_male_text">男</string>
+    <string name="activity_regist_female_text">女</string>
+    <string name="activity_regist_age_text">年龄</string>
+    <string name="activity_regist_bt_cancle">取消</string>
+    <string name="activity_regist_bt_regist">注册</string>
+     <string name="left_menu_nick_text">昵称</string>
+
+</resources>
