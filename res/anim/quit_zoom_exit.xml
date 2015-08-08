@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 声明Activity退出时使用的动画资源
+
+     android:interpolator:指定在设定时间内动画移动过程中插补器，用于改善动画的平滑度
+
+     android:zAdjustment:允许再动画播放期间，调整播放内容在Z轴方向的顺序，normal（0）：真正播放的
+
+            动画内容保持当前的Z轴顺序，top（1）：在动画播放期间，强制把当前播放的内容放到其他内容的上面；
+
+     bottom（-1）：在动画播放期间，强制把当前播放的内容放到其他内容之下。
+
+-->
+
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+
+        android:interpolator="@android:anim/decelerate_interpolator"
+
+        android:zAdjustment="top">
+
+    <!-- 指定动画对象的缩放因子和播放时间
+
+        android:fromXScale和android:toXScale指定X轴的动画开始和结束时的缩放因子
+
+        android:fromYScale和android:toYScale指定Y轴的动画开始和结束时的缩放因子
+
+        android:pivoteX:在动画对象被缩放时，X轴要保留的原始尺寸的百分比。
+
+        android:pivoteY:在动画对象被缩放时，Y轴要保留的原始尺寸的百分比。
+
+        android:duration指定动画的播放时间
+
+     -->
+
+    <scale android:fromXScale="1.0" android:toXScale=".5"
+
+           android:fromYScale="1.0" android:toYScale=".5"
+
+           android:pivotX="50%p" android:pivotY="50%p"
+
+           android:duration="@android:integer/config_mediumAnimTime" />
+
+    <!-- 定义动画对象的透明度，该动画在动画缩放之后播放。
+
+        android:fromAlpha:指定动画初始时的透明度
+
+        android:toAlpha:指定动画结束时的透明度
+
+        android:duratiion：指定动画透明处理的执行时间
+
+    -->
+
+    <alpha android:fromAlpha="1.0" android:toAlpha="0"
+
+            android:duration="@android:integer/config_mediumAnimTime"/>
+
+</set>

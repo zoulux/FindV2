@@ -30,13 +30,14 @@
                 android:text="好友头像"
                 android:textSize="20sp" />
 
-            <ImageView
+            <com.zgrjb.find.view.CircleImageView
                 android:id="@+id/friendAvertarImageView"
                 android:layout_width="55dp"
                 android:layout_height="55dp"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:scaleType="fitCenter"
+                android:onClick="circleImageViewLis"
                 android:src="@drawable/child" />
         </LinearLayout>
 

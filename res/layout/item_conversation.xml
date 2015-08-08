@@ -13,7 +13,7 @@
         android:paddingTop="5.0dip" 
         >
 
-        <ImageView
+        <com.zgrjb.find.view.CircleImageView
                style="@style/Smile.ImageView.Photo_Middle"
             android:contentDescription="头像"
             android:id="@+id/iv_recent_avatar"

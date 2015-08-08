@@ -41,7 +41,7 @@ public class TryToPlayGameActivity extends BaseActivity {
 
 		playMp3Win = MediaPlayer.create(this, R.raw.win);
 		playMp3Failue = MediaPlayer.create(this, R.raw.failue);
-		// 获得intent的值
+		//获得intent的值
 		Intent intent = getIntent();
 		diff2 = intent.getIntExtra("diff", -1);
 		randomNumber = intent.getIntExtra("random", -1);
@@ -71,6 +71,7 @@ public class TryToPlayGameActivity extends BaseActivity {
 											int swich) {
 										playMp3Win.stop();
 										TryToPlayGameActivity.this.finish();
+										overridePendingTransition(R.anim.quit_zoom_enter, R.anim.quit_zoom_exit);
 									}
 								}).show();
 			}
@@ -106,7 +107,6 @@ public class TryToPlayGameActivity extends BaseActivity {
 
 		});
 	}
-
 	// 设置游戏的难度
 	private void set() {
 		mGamePintuLayout.setdifficult(diff2);
@@ -119,13 +119,14 @@ public class TryToPlayGameActivity extends BaseActivity {
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
+		
 		mGamePintuLayout.stopAndRemove();
 		Intent intent2 = new Intent("send");
 		sendBroadcast(intent2);
-		Intent intent = new Intent(TryToPlayGameActivity.this,
-				MainUIActivity.class);
-		startActivity(intent);
-		TryToPlayGameActivity.this.finish();
+		overridePendingTransition(R.anim.quit_zoom_enter, R.anim.quit_zoom_exit);
+//		Intent intent = new Intent(TryToPlayGameActivity.this,MainUIActivity.class);
+//		startActivity(intent);
+//		TryToPlayGameActivity.this.finish();
 
 	}
 

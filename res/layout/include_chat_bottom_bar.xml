@@ -100,4 +100,14 @@
         android:src="@drawable/btn_chat_add_camera_selector"
         android:visibility="gone" />
 
+    <ImageView
+        android:id="@+id/img_paint"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_toRightOf="@+id/img_getalbum"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="30dp"
+        android:src="@drawable/btn_chat_add_paint_selector"
+        android:visibility="gone" />
+
 </RelativeLayout>

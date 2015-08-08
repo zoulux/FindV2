@@ -66,6 +66,7 @@ public class PreparePuzzleGameActivity extends BaseActivity {
 				intent.putExtra("diffValue", diffValue);
 				startActivity(intent);
 				PreparePuzzleGameActivity.this.finish();
+				overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_exit);
 			}
 		});
 	}

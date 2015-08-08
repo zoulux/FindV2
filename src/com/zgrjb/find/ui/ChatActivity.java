@@ -19,12 +19,14 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -109,9 +111,11 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
 
 	private boolean isOpen;// 判断加号菜单是否打开
 
-	private ImageView imgPhoto, imgGetAlbum;
+	private ImageView imgPhoto, imgGetAlbum, imgMyPaint;
 
 	private Drawable[] drawable_Anims;// 话筒动画
+
+	private BroadcastReceiver broadcastReceiver;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -161,10 +165,8 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
 	private void init() {
 
 		targetUser = (MyUser) getIntent().getSerializableExtra("user");
-		
 		targetId = targetUser.getObjectId();
 		targetUserName = targetUser.getUsername();
-		
 		MsgPagerNum = 0;
 		currentUserId = BmobChatUser.getCurrentUser(ChatActivity.this)
 				.getObjectId();
@@ -174,7 +176,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
 		initBottomView();
 		initXListView();
 		initVoiceView();
-
+		getBroadcastFromPaintActivity();
 	}
 
 	/**
@@ -287,7 +289,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
 
 				if (!CommonUtils.checkSdCard()) {
 					ShowToast("发送语音需要sdcard支持！");
-					return false;
+					return false;    
 				}
 				try {
 					if (shorToast != null) {
@@ -296,7 +298,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
 
 					v.setPressed(true);
 					layout_record.setVisibility(View.VISIBLE);
-					tv_voice_tips.setText("松开手指 取消发送");
+					tv_voice_tips.setText("松开手指 \n取消发送");
 					// 开始录音
 					recordManager.startRecording(targetId);
 				} catch (Exception e) {
@@ -466,8 +468,10 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
 		btn_chat_send.setOnClickListener(this);
 		imgPhoto = (ImageView) this.findViewById(R.id.img_photo);
 		imgGetAlbum = (ImageView) this.findViewById(R.id.img_getalbum);
+		imgMyPaint = (ImageView) this.findViewById(R.id.img_paint);
 		imgPhoto.setOnClickListener(this);
 		imgGetAlbum.setOnClickListener(this);
+		imgMyPaint.setOnClickListener(this);
 
 		// 语音框
 		btn_speak = (Button) findViewById(R.id.btn_speak);
@@ -485,6 +489,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
 					btn_chat_voice.setVisibility(View.GONE);
 					btn_chat_add.setClickable(false);
 					btn_chat_add.setFocusable(false);
+					btn_chat_add.setAlpha(0.2f);
 				} else {
 					if (btn_chat_voice.getVisibility() != View.VISIBLE) {
 						btn_chat_voice.setVisibility(View.VISIBLE);
@@ -492,6 +497,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
 						btn_chat_keyboard.setVisibility(View.GONE);
 						btn_chat_add.setClickable(true);
 						btn_chat_add.setFocusable(true);
+						btn_chat_add.setAlpha(1.0f);
 					}
 				}
 
@@ -533,6 +539,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
 			btn_speak.setVisibility(View.VISIBLE);
 			btn_chat_add.setClickable(false);
 			btn_chat_add.setFocusable(false);
+			btn_chat_add.setAlpha(0.2f);
 			hideSoftInputView();
 			break;
 
@@ -545,6 +552,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
 			btn_chat_add.setVisibility(View.VISIBLE);
 			btn_chat_add.setClickable(true);
 			btn_chat_add.setFocusable(true);
+			btn_chat_add.setAlpha(1.0f);
 			break;
 		case R.id.btn_chat_send:// 发送文本
 			sendTxt(edit_user_comment.getText().toString(), 0);
@@ -557,6 +565,8 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
 				@Override
 				public void run() {
 					takePhoto();
+					overridePendingTransition(R.anim.zoom_enter,
+							R.anim.zoom_exit);
 					edit_user_comment.setVisibility(View.VISIBLE);
 					btn_chat_voice.setVisibility(View.VISIBLE);
 					isOpen = false;
@@ -565,12 +575,30 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
 			break;
 		case R.id.img_getalbum:// 发送相册里的照片
 			imgGetAlbumAni();
-
 			new Handler().postDelayed(new Runnable() {
 
 				@Override
 				public void run() {
 					getPictureInAlbum();
+					overridePendingTransition(R.anim.zoom_enter,
+							R.anim.zoom_exit);
+					edit_user_comment.setVisibility(View.VISIBLE);
+					btn_chat_voice.setVisibility(View.VISIBLE);
+					isOpen = false;
+				}
+			}, 500);
+			break;
+		case R.id.img_paint:// 发送
+			imgPaintAni();
+
+			new Handler().postDelayed(new Runnable() {
+
+				@Override
+				public void run() {
+					startActivity(new Intent(ChatActivity.this,
+							MyPaintActivity.class));
+					overridePendingTransition(R.anim.zoom_enter,
+							R.anim.zoom_exit);
 					edit_user_comment.setVisibility(View.VISIBLE);
 					btn_chat_voice.setVisibility(View.VISIBLE);
 					isOpen = false;
@@ -689,8 +717,10 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
 	private void setClickAndFocusFalse() {
 		imgPhoto.setClickable(false);
 		imgGetAlbum.setClickable(false);
+		imgMyPaint.setClickable(false);
 		imgPhoto.setFocusable(false);
 		imgGetAlbum.setFocusable(false);
+		imgMyPaint.setFocusable(false);
 	}
 
 	/**
@@ -699,8 +729,10 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
 	private void setClickAndFocusTrue() {
 		imgPhoto.setClickable(true);
 		imgGetAlbum.setClickable(true);
+		imgMyPaint.setClickable(true);
 		imgPhoto.setFocusable(true);
 		imgGetAlbum.setFocusable(true);
+		imgMyPaint.setFocusable(true);
 	}
 
 	/**
@@ -714,9 +746,11 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
 			btn_chat_voice.setVisibility(View.GONE);
 			imgPhoto.setVisibility(View.VISIBLE);
 			imgGetAlbum.setVisibility(View.VISIBLE);
+			imgMyPaint.setVisibility(View.VISIBLE);
 			rotateBtAdd(v, 0f, 360f, 300);
 			scaleBigAnim(500, imgPhoto);
 			scaleBigAnim(500, imgGetAlbum);
+			scaleBigAnim(500, imgMyPaint);
 			new Handler().postDelayed(new Runnable() {
 
 				@Override
@@ -733,9 +767,11 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
 			btn_chat_voice.setVisibility(View.VISIBLE);
 			imgPhoto.setVisibility(View.GONE);
 			imgGetAlbum.setVisibility(View.GONE);
+			imgMyPaint.setVisibility(View.GONE);
 			rotateBtAdd(v, 0f, 360f, 300);
 			scaleSmallAnim(500, imgPhoto);
 			scaleSmallAnim(500, imgGetAlbum);
+			scaleSmallAnim(500, imgMyPaint);
 			setClickAndFocusFalse();
 			isOpen = false;
 
@@ -809,6 +845,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
 
 		SelectItemScaleBig(500, imgPhoto);
 		SelectItemScaleSmall(500, imgGetAlbum);
+		SelectItemScaleSmall(500, imgMyPaint);
 		setClickAndFocusFalse();
 
 	}
@@ -819,10 +856,18 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
 	private void imgGetAlbumAni() {
 		SelectItemScaleBig(500, imgGetAlbum);
 		SelectItemScaleSmall(500, imgPhoto);
-		imgPhoto.setClickable(false);
-		imgGetAlbum.setClickable(false);
-		imgPhoto.setFocusable(false);
-		imgGetAlbum.setFocusable(false);
+		SelectItemScaleSmall(500, imgMyPaint);
+		setClickAndFocusFalse();
+	}
+
+	/**
+	 * 点击从相册获取的按钮的动作
+	 */
+	private void imgPaintAni() {
+		SelectItemScaleBig(500, imgMyPaint);
+		SelectItemScaleSmall(500, imgPhoto);
+		SelectItemScaleSmall(500, imgGetAlbum);
+		setClickAndFocusFalse();
 	}
 
 	/**
@@ -848,14 +893,14 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
 
 	private void sendTxt(String msg, int i) {
 
-		if (TextUtils.isEmpty(msg)) {
+		if (msg.equals("")) {
 			ShowToast("请输入发送消息!");
 			return;
 		}
 		boolean isNetConnected = CommonUtils.isNetworkAvailable(this);
 		if (!isNetConnected) {
 			ShowToast("没有网络连接");
-			return;
+			// return;
 		}
 		// 组装BmobMessage对象
 		BmobMsg message = BmobMsg.createTextSendMsg(this, targetId, msg);
@@ -863,16 +908,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
 		message.setExtra("Bmob");
 		// 默认发送完成，将数据保存到本地消息表和最近会话表中
 
-		System.out.println(">>targetUser:"+targetUser.getObjectId());
-		System.out.println(">>>BmobMsg：" + message.getContent());
-		System.out.println(">>msgBelongId：" + message.getBelongId());
-		System.out.println(">>msgToId：" + message.getToId());
-		
-		
-		
 		chatManager.sendTextMessage(targetUser, message);
-		
-		
 		// 刷新界面
 
 		if (i == 1) {
@@ -933,7 +969,6 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
 	}
 
 	private void refreshMessage(BmobMsg message) {
-
 
 		mDatas.add(message);
 		mListView.setSelection(mAdapter.getCount() - 1);
@@ -1022,16 +1057,11 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
 			if (msg.what == NEW_MESSAGE) {
 				BmobMsg message = (BmobMsg) msg.obj;
 				String uid = message.getBelongId();
-				
-				System.out.println("BelongId>>message>>:"+message.getBelongId());
-				System.out.println("ToId>>message>>:"+message.getToId());
-				
 				// BmobMsg m = BmobChatManager.getInstance(ChatActivity.this)
 				// .getMessage(message.getConversationId(),
 				// message.getMsgTime());
-				if (!(uid.trim()).equals(targetId.trim()))// 如果不是当前正在聊天对象的消息，不处理
+				if (!uid.equals(targetId))// 如果不是当前正在聊天对象的消息，不处理
 					return;
-				
 				mDatas.add(message);
 				// 定位
 				mListView.setSelection(mAdapter.getCount() - 1);
@@ -1068,11 +1098,39 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
 		// 清空消息未读数-这个要在刷新之后
 		MyMessageReceiver.mNewNum = 0;
 
+		// 注册广播
+
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction("sendPaint");
+		registerReceiver(broadcastReceiver, intentFilter);
+
+	}
+
+	private void getBroadcastFromPaintActivity() {
+		broadcastReceiver = new BroadcastReceiver() {
+
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				String s = intent.getStringExtra("date");
+				Log.i("TAG", Environment.getExternalStorageDirectory()
+						+ "/Find/Picture_Regist/" + s + ".jpg");
+
+				sendImagePicture(Environment.getExternalStorageDirectory()
+						+ "/Find/Picture_Regist/" + s + ".jpg");
+
+			}
+		};
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
 		MyMessageReceiver.ehList.remove(this);// 取消监听推送的消息
+	}
+
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		overridePendingTransition(R.anim.quit_zoom_enter, R.anim.quit_zoom_exit);
 	}
 }

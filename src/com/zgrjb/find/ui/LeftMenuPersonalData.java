@@ -1,5 +1,6 @@
 package com.zgrjb.find.ui;
 
+import java.io.File;
 import java.util.List;
 
 import android.app.AlertDialog;
@@ -9,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -30,7 +32,9 @@ import cn.bmob.v3.listener.UpdateListener;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.zgrjb.find.R;
 import com.zgrjb.find.bean.MyUser;
+import com.zgrjb.find.utils.CircleImageDrawable;
 import com.zgrjb.find.utils.ImageLoadOptions;
+
 
 public class LeftMenuPersonalData extends BaseActivity implements
 		OnClickListener {
@@ -141,6 +145,8 @@ public class LeftMenuPersonalData extends BaseActivity implements
 	// “Ï≤Ωº”‘ÿÕ∑œÒ
 	private void setAvatar(String avatar) {
 		if (avatar != null && !avatar.equals("")) {
+			//File f = ImageLoader.getInstance().getDiscCache().get("");
+			//Bitmap b=ImageLoadOptions.getOptions().getDecodingOptions().inBitmap;
 			ImageLoader.getInstance().displayImage(avatar,
 					personalAvertarImageview, ImageLoadOptions.getOptions());
 		} else {
@@ -340,5 +346,9 @@ public class LeftMenuPersonalData extends BaseActivity implements
 
 		super.onActivityResult(requestCode, resultCode, data);
 	}
-
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		overridePendingTransition(R.anim.quit_zoom_enter, R.anim.quit_zoom_exit);
+	}
 }

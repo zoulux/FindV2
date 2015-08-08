@@ -76,6 +76,7 @@ public class PlayPuzzleGameActivity extends BaseActivity {
 										startActivity(intent);
 										playMp3Win.stop();
 										PlayPuzzleGameActivity.this.finish();
+										overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_exit);
 									}
 								}).show();
 			}
@@ -126,6 +127,7 @@ public class PlayPuzzleGameActivity extends BaseActivity {
 	public void onBackPressed() {
 		super.onBackPressed();
 		mGamePintuLayout.stopAndRemove();
+		overridePendingTransition(R.anim.quit_zoom_enter, R.anim.quit_zoom_exit);
 	}
 
 	@Override

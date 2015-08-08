@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import com.zgrjb.find.R;
 import com.zgrjb.find.bean.MyUser;
 import com.zgrjb.find.ui.BaseActivity;
+import com.zgrjb.find.ui.fragment.ContactsFragment;
 
 public class TryToPrepareGame extends BaseActivity {
 	// 定义一个按钮isPrepared
@@ -57,9 +58,17 @@ public class TryToPrepareGame extends BaseActivity {
 						ChoiceDifferPictureToPlay.getRandomNumber());
 				intent.putExtra("diffValue", diffValue);
 				startActivity(intent);
-//				TryToPrepareGame.this.finish();
+				TryToPrepareGame.this.finish();
+				overridePendingTransition(
+						R.anim.zoom_enter, R.anim.zoom_exit);
 			}
 		});
 	}
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		overridePendingTransition(R.anim.quit_zoom_enter, R.anim.quit_zoom_exit);
+	}
+
 
 }

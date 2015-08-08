@@ -1,4 +1,5 @@
 package com.zgrjb.find.view;
+
 import android.content.Context;
 import android.graphics.Matrix;
 import android.graphics.RectF;
@@ -288,4 +289,5 @@ public class ZoomImageView extends ImageView implements OnGlobalLayoutListener,
 	public int getH() {
 		return getMaxHeight();
 	}
+
 }

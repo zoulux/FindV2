@@ -1,5 +1,6 @@
 package com.zgrjb.find.ui;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.annotation.SuppressLint;
@@ -19,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import cn.bmob.im.bean.BmobMsg;
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.listener.FindListener;
@@ -28,6 +30,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.zgrjb.find.R;
 import com.zgrjb.find.bean.MyUser;
 import com.zgrjb.find.ui.dialog.MyDialog;
+import com.zgrjb.find.ui.fragment.ContactsFragment;
 import com.zgrjb.find.utils.CustomApplcation;
 import com.zgrjb.find.utils.ImageLoadOptions;
 
@@ -40,6 +43,9 @@ public class FriendsDataActivity extends BaseActivity {
 	private Button btChat;
 
 	private MyDialog dialog;
+
+	private MyUser mUser;
+	private boolean isTrue;
 
 	// MyUser friend;
 	String targetId;
@@ -101,10 +107,37 @@ public class FriendsDataActivity extends BaseActivity {
 		getUserIntent();
 		showTitleText("好友资料");
 		init();
+		if (isTrue) {
+			btChat.setVisibility(View.GONE);
+		}else{
+			btChat.setVisibility(View.VISIBLE);
+		}
+	}
+
+	/**
+	 * 点击好友头像放大显示
+	 * 
+	 * @param v
+	 */
+	public void circleImageViewLis(View v) {
+		sendPictureToObserve(mUser.getAvatar());
+
+	}
+
+	// 将图片传递到ObservePictureAcitivity放大显示
+	private void sendPictureToObserve(String url) {
+		Intent intent = new Intent(FriendsDataActivity.this,
+				ObservePictureAcitivity.class);
+		ArrayList<String> photos = new ArrayList<String>();
+		photos.add(url);
+		intent.putStringArrayListExtra("photos", photos);
+		intent.putExtra("position", 0);
+		FriendsDataActivity.this.startActivity(intent);
+
 	}
 
 	protected void setFriendInfo(MyUser user) {
-
+		mUser = user;
 		if (!TextUtils.isEmpty(user.getAvatar())) {
 			ImageLoader.getInstance().displayImage(user.getAvatar(),
 					friendsAvartarImageView, ImageLoadOptions.getOptions());
@@ -143,10 +176,14 @@ public class FriendsDataActivity extends BaseActivity {
 	}
 
 	private void getUserIntent() {
-
+		Intent intent = getIntent();
 		// friend = (MyUser) getIntent().getSerializableExtra("user");
 		targetId = ((MyUser) getIntent().getSerializableExtra("user"))
 				.getObjectId();
+		
+		isTrue = intent.getBooleanExtra("isChat", false);
+	//	System.err.println(isTrue+">>>>>>>>>>>>>>");
+		
 
 	}
 
@@ -191,6 +228,7 @@ public class FriendsDataActivity extends BaseActivity {
 		intent.putExtra("user", user);
 		startActivity(intent);
 		finish();
+		overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_exit);
 	}
 
 	/**
@@ -262,44 +300,11 @@ public class FriendsDataActivity extends BaseActivity {
 
 	}
 
-	// private void deleteUser(final MyUser user) {
-	// final ProgressDialog progress = new ProgressDialog(this);
-	// progress.setMessage("正在删除...");
-	// progress.setCanceledOnTouchOutside(false);
-	// progress.show();
-	// userManager.deleteContact(user.getObjectId(), new UpdateListener() {
-	//
-	// @Override
-	// public void onSuccess() {
-	// System.out.println("success");
-	// // TODO Auto-generated method stub
-	// Toast.makeText(getActivity(), "删除成功", Toast.LENGTH_SHORT)
-	// .show();
-	// // 删除内存
-	// CustomApplcation.getInstance().getContactList()
-	// .remove(user.getUsername());
-	// // 更新界面
-	// runOnUiThread(new Runnable() {
-	// public void run() {
-	// progress.dismiss();
-	// list.remove(user);
-	// list_friends.setSelection(list.size() - 1);
-	// contactAdapter.notifyDataSetChanged();
-	//
-	// }
-	// });
-	// }
-	//
-	// @Override
-	// public void onFailure(int arg0, String arg1) {
-	// System.out.println("fail");
-	// // TODO Auto-generated method stub
-	// Toast.makeText(getActivity(), "删除失败", Toast.LENGTH_SHORT)
-	// .show();
-	// progress.dismiss();
-	// }
-	// });
-	//
-	// }
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		overridePendingTransition(R.anim.quit_zoom_enter, R.anim.quit_zoom_exit);
+	
+	}
 
 }

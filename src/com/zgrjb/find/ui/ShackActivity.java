@@ -1,7 +1,10 @@
 package com.zgrjb.find.ui;
 
+import com.zgrjb.find.R;
+import com.zgrjb.find.utils.ShakeListener;
+import com.zgrjb.find.utils.ShakeListener.OnShakeListener;
+
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -10,42 +13,40 @@ import android.os.Vibrator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.TranslateAnimation;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import com.zgrjb.find.R;
-import com.zgrjb.find.utils.ShakeListener;
-import com.zgrjb.find.utils.ShakeListener.OnShakeListener;
 
-public class ShackActivity extends Activity {
+public class ShackActivity extends BaseActivity {
 	// 定义一个摇一摇监听
 	ShakeListener mShakeListener = null;
 	// 定义一个震动类
 	private Vibrator mVibrator;
-	// 定义一个向上的layout
-	private RelativeLayout mImgUp;
-	// 定义一个向下的layout
-	private RelativeLayout mImgDn;
 	// 定义一个播放音乐的类
 	private MediaPlayer player;
-	// 在mShakeListener停止的时候，获取当前的时间
-	long currentTimestop;
-	// 在mShakeListener开启的时候，获取当前的时间
-	long currentTimestart;
-	// 判断是否可摇，初始化为可摇状态
-	private boolean isOnshake = true;
-	// 定义一个时间
-	private long time = 0;
+	// 定义一个向上的ImageView
+	private RelativeLayout mImgUp;
+	// 定义一个向下的ImageView
+	private RelativeLayout mImgDn;
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
+	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main_ui_discover_shack);
+		setContentView(R.layout.activity_shack);
+		init();
 
+	}
+
+	private void init() {
+		showTitleText("摇一摇");
+		mImgUp = (RelativeLayout) findViewById(R.id.shakeImgUp);
+		mImgDn = (RelativeLayout) findViewById(R.id.shakeImgDown);
+		initListener();
+	}
+
+	private void initListener() {
 		mVibrator = (Vibrator) getApplication().getSystemService(
 				VIBRATOR_SERVICE);
 
-		mImgUp = (RelativeLayout) findViewById(R.id.shakeImgUp);
-		mImgDn = (RelativeLayout) findViewById(R.id.shakeImgDown);
 		mShakeListener = new ShakeListener(ShackActivity.this);
 		mShakeListener.setOnShakeListener(new OnShakeListener() {
 			public void onShake() {
@@ -56,91 +57,47 @@ public class ShackActivity extends Activity {
 		});
 	}
 
-	/**
-	 * 通过多线程对摇一摇的控制
-	 */
-	private void controlTheShake() {
-		mShakeListener.stop();
-		isOnshake = true;
-		currentTimestop = System.currentTimeMillis();
-		time = currentTimestop;
-
-		new Handler().postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				currentTimestart = System.currentTimeMillis();
-				mShakeListener.start();
-				isOnshake = false;
-			}
-		}, 2000);
-
-		new Handler().postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				if (!isOnshake) {
-					mShakeListener.stop();
-					ProgressDialog dialog2 = ProgressDialog.show(
-							ShackActivity.this, "提示", "查找好友中");
-					new Handler().postDelayed(new Runnable() {
-						@Override
-						public void run() {
-							startActivity(new Intent(ShackActivity.this,
-									MapActivity.class));
-							finish();
-						}
-					}, 2000);
-				}
-			}
-		}, 3000);
-	}
-
-	/**
-	 * 定义摇一摇动画动画
-	 */
-	private void startAnim() {
+	protected void startAnim() {
 		AnimationSet animup = new AnimationSet(true);
 		TranslateAnimation mytranslateanimup0 = new TranslateAnimation(
 				Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 0f,
 				Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF,
-				-0.5f);
-		mytranslateanimup0.setDuration(1000);
-		TranslateAnimation mytranslateanimup1 = new TranslateAnimation(
-				Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 0f,
-				Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF,
-				+0.5f);
-		mytranslateanimup1.setDuration(1000);
-		mytranslateanimup1.setStartOffset(1000);
+				-1.0f);
+		mytranslateanimup0.setDuration(2000);
+
 		animup.addAnimation(mytranslateanimup0);
-		animup.addAnimation(mytranslateanimup1);
 		mImgUp.startAnimation(animup);
 
 		AnimationSet animdn = new AnimationSet(true);
 		TranslateAnimation mytranslateanimdn0 = new TranslateAnimation(
 				Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 0f,
 				Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF,
-				+0.5f);
-		mytranslateanimdn0.setDuration(1000);
-		TranslateAnimation mytranslateanimdn1 = new TranslateAnimation(
-				Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 0f,
-				Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF,
-				-0.5f);
-		mytranslateanimdn1.setDuration(1000);
-		mytranslateanimdn1.setStartOffset(1000);
+				+1.0f);
+		mytranslateanimdn0.setDuration(2000);
 		animdn.addAnimation(mytranslateanimdn0);
-		animdn.addAnimation(mytranslateanimdn1);
 		mImgDn.startAnimation(animdn);
+
 	}
 
-	/**
-	 * 开启震动
-	 */
-	private void startVibrato() {
+	protected void controlTheShake() {
+		mShakeListener.stop();
+		new Handler().postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				startActivity(new Intent(ShackActivity.this,
+						ScannActivity.class));
+				ShackActivity.this.finish();
+				overridePendingTransition(R.anim.fade, R.anim.hold);
 
+			}
+		}, 1600);
+
+	}
+
+	protected void startVibrato() {
 		player = MediaPlayer.create(this, R.raw.notify);
-
 		player.setLooping(false);
 		player.start();
-
 		// 定义震动
 		mVibrator.vibrate(new long[] { 600, 300, 600, 300 }, -1); // 第一个｛｝里面是节奏数组，
 																	// 第二个参数是重复次数，-1为不重复，非-1俄日从pattern的指定下标开始重复
@@ -170,5 +127,11 @@ public class ShackActivity extends Activity {
 		if (mShakeListener != null) {
 			mShakeListener.stop();
 		}
+	}
+
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		overridePendingTransition(R.anim.quit_zoom_enter, R.anim.quit_zoom_exit);
 	}
 }

@@ -48,7 +48,7 @@ public class ChoiceThemeActivity extends BaseActivity implements
 		pinkThemeBt = (Button) this.findViewById(R.id.red_theme_bt);
 		pinkThemeBt.setOnClickListener(this);
 		dialog = new MyDialog(this);
-		defualtTheme = (Button)this.findViewById(R.id.default_theme_bt);
+		defualtTheme = (Button) this.findViewById(R.id.default_theme_bt);
 		defualtTheme.setOnClickListener(this);
 	}
 
@@ -65,9 +65,14 @@ public class ChoiceThemeActivity extends BaseActivity implements
 			dialog.showChoiceThemeDialog(3);
 		} else if (v == pinkThemeBt) {
 			dialog.showChoiceThemeDialog(4);
-		}else if (v==defualtTheme) {
+		} else if (v == defualtTheme) {
 			dialog.showChoiceThemeDialog(5);
 		}
 	}
 
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		overridePendingTransition(R.anim.quit_zoom_enter, R.anim.quit_zoom_exit);
+	}
 }

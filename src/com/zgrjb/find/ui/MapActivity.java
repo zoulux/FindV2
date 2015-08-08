@@ -87,14 +87,11 @@ public class MapActivity extends BaseActivity {
 			String userName = (String) msg.obj;
 
 			user = mApplication.getNearPeople().get(userName);
-			System.out.println(user.getUsername()+"getUsername+?????????????????");
-			System.out.println(user.getNick()+"getNick+????????????????????");
-			System.out.println(user.getAvatar()+"getAvatar+??????????????????????");
-		
-			
-			
-			
-			
+			System.out.println(user.getUsername()
+					+ "getUsername+?????????????????");
+			System.out.println(user.getNick() + "getNick+????????????????????");
+			System.out.println(user.getAvatar()
+					+ "getAvatar+??????????????????????");
 
 			LatLng ll = selectMarker.getPosition();
 
@@ -102,42 +99,17 @@ public class MapActivity extends BaseActivity {
 			tv.setBackgroundResource(R.drawable.popup);
 			tv.setTextColor(Color.parseColor("#333333"));
 			tv.setText(user.getUsername());
-
-			// Button button = new Button(getApplicationContext());
-			// button.setBackgroundResource(R.drawable.popup);
-			// button.setText(user.getUsername());
-			// button.setTextColor(android.R.color.background_dark);
-
-			// final AlertDialog.Builder dialog = new Builder(MapActivity.this);
-			// dialog.setMessage("添加好友");
-			// dialog.setTitle("提示");
-			// dialog.setPositiveButton("确定", new OnClickListener() {
-			//
-			// @Override
-			// public void onClick(DialogInterface arg0, int arg1) {
-			// addFriend(user);
-			//
-			// }
-			// });
-			//
-			// dialog.setNegativeButton("和他聊天", new OnClickListener() {
-			//
-			// @Override
-			// public void onClick(DialogInterface arg0, int arg1) {
-			// Intent intent = new Intent(MapActivity.this,
-			// ChatActivity.class);
-			//
-			// intent.putExtra("user", user);
-			//
-			// startActivity(intent);
-			// }
-			// });
-
 			OnInfoWindowClickListener listener = null;
 			listener = new OnInfoWindowClickListener() {
 				public void onInfoWindowClick() {
+					new Handler().postDelayed(new Runnable() {
 
-					// dialog.create().show();
+						@Override
+						public void run() {
+							// 玩游戏的对话框
+							showDialogToPlayGame();
+						}
+					}, 1);
 
 					mBaiduMap.hideInfoWindow();
 				}
@@ -179,25 +151,20 @@ public class MapActivity extends BaseActivity {
 				message.obj = username;
 				handlerAddMarker.sendMessage(message);
 				/*
-				new Handler().post(new Runnable() {
+				 * new Handler().post(new Runnable() {
+				 * 
+				 * @Override public void run() { // 玩游戏的对话框
+				 * showDialogToPlayGame(); } });
+				 */
 
-					@Override
-					public void run() {
-						// 玩游戏的对话框
-						showDialogToPlayGame();
-					}
-				});*/
-				
-				
-			
-				new Handler().postDelayed(new Runnable() {
-
-					@Override
-					public void run() {
-						// 玩游戏的对话框
-						showDialogToPlayGame();
-					}
-				}, 1000); 
+				// new Handler().postDelayed(new Runnable() {
+				//
+				// @Override
+				// public void run() {
+				// // 玩游戏的对话框
+				// showDialogToPlayGame();
+				// }
+				// }, 1000);
 
 				return false;
 			}
@@ -490,6 +457,7 @@ public class MapActivity extends BaseActivity {
 				intent.putExtra("user", MapActivity.getUser());
 				MapActivity.this.startActivity(intent);
 				MapActivity.this.finish();
+				overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_exit);
 			}
 		});
 		builder2.setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -501,5 +469,11 @@ public class MapActivity extends BaseActivity {
 			}
 		});
 		builder2.show();
+	}
+
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		overridePendingTransition(R.anim.quit_zoom_enter, R.anim.quit_zoom_exit);
 	}
 }

@@ -10,7 +10,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
@@ -25,7 +24,9 @@ import com.zgrjb.find.R;
 import com.zgrjb.find.bean.MyUser;
 import com.zgrjb.find.config.ImgUir;
 import com.zgrjb.find.file_handle.HandlePicFile;
+import com.zgrjb.find.utils.CircleImageDrawable;
 import com.zgrjb.find.utils.CommonUtils;
+import com.zgrjb.find.utils.FileServiceFlag;
 
 public class LogInActivity extends BaseActivity implements OnClickListener {
 	// 初始化登录界面的头像
@@ -69,7 +70,7 @@ public class LogInActivity extends BaseActivity implements OnClickListener {
 		if (!file.exists() || value != 1) {
 			Bitmap bm = BitmapFactory.decodeResource(getResources(),
 					R.drawable.child);
-			logInImageView.setImageBitmap(bm);
+			logInImageView.setImageDrawable(new CircleImageDrawable(bm));
 
 		} else {
 			logInImageView.setImageBitmap(getBitmap(this, ImgUir.ALBUM_PATH
@@ -85,6 +86,7 @@ public class LogInActivity extends BaseActivity implements OnClickListener {
 		LogInBt.setOnClickListener(this);
 		handleFile = new HandlePicFile(this, ImgUir.ALBUM_PATH);
 
+		// startAvertarAnimation();
 	}
 
 	public static Bitmap getBitmap(Context context, String resName) {
@@ -145,10 +147,10 @@ public class LogInActivity extends BaseActivity implements OnClickListener {
 			checkUser();
 
 		} else if (v == newUserTextView) {
-			// 若注册，则先照相
-			takePhotos();
+			startActivity(new Intent(LogInActivity.this, RegistActivity.class));
+			LogInActivity.this.finish();
+			overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_exit);
 		}
-
 	}
 
 	/**
@@ -200,7 +202,9 @@ public class LogInActivity extends BaseActivity implements OnClickListener {
 				ShowToast("登陆成功");
 				Intent intent = new Intent(LogInActivity.this,
 						MainUIActivity.class);
+
 				startActivity(intent);
+				overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_exit);
 				finish();
 			}
 
@@ -242,5 +246,10 @@ public class LogInActivity extends BaseActivity implements OnClickListener {
 		} else {
 			ShowToast("获取照片失败");
 		}
+	}
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		overridePendingTransition(R.anim.quit_zoom_enter, R.anim.quit_zoom_exit);
 	}
 }

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 声明动画对象进入屏幕时的动画资源
+
+     android:interpolator:指定在设定时间内动画移动过程中插补器，用于改善动画的平滑度
+
+-->
+
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+
+        android:interpolator="@android:anim/decelerate_interpolator">
+
+    <!-- 声明动画对象进入屏幕时的缩放动画，
+
+                      属性说明参照zoom_exit.xml -->
+
+    <scale android:fromXScale="2.0" android:toXScale="1.0"
+
+           android:fromYScale="2.0" android:toYScale="1.0"
+
+           android:pivotX="50%p" android:pivotY="50%p"
+
+           android:duration="@android:integer/config_mediumAnimTime" />
+
+</set>

@@ -23,6 +23,15 @@ import com.zgrjb.find.utils.TimeUtil;
 public class RecentAdapter extends ArrayAdapter<BmobRecent> {
 	private LayoutInflater inflater;
 	private List<BmobRecent> mData;
+
+	public List<BmobRecent> getmData() {
+		return mData;
+	}
+
+	public void setmData(List<BmobRecent> mData) {
+		this.mData = mData;
+	}
+
 	private Context mContext;
 
 	public RecentAdapter(Context context, int resource, List<BmobRecent> list) {
@@ -40,7 +49,7 @@ public class RecentAdapter extends ArrayAdapter<BmobRecent> {
 	public View getView(int position, View convertView, ViewGroup parent) {
 
 		BmobRecent contact = mData.get(position);
-		
+
 		ViewHolde viewHolde = null;
 		if (convertView == null) {
 			convertView = inflater.inflate(R.layout.item_conversation, parent,
@@ -61,7 +70,7 @@ public class RecentAdapter extends ArrayAdapter<BmobRecent> {
 		} else {
 			viewHolde = (ViewHolde) convertView.getTag();
 		}
-		// 设置数据
+		// 设置数据 
 		String avatar = contact.getAvatar();
 		if (avatar != null && !avatar.equals("")) {
 			ImageLoader.getInstance().displayImage(avatar, viewHolde.iv_avatar,
@@ -70,12 +79,11 @@ public class RecentAdapter extends ArrayAdapter<BmobRecent> {
 			viewHolde.iv_avatar.setImageResource(R.drawable.child);
 		}
 
-
-		viewHolde.tv_recent_name.setText(contact.getUserName());
+		viewHolde.tv_recent_name.setText(contact.getNick());
 		viewHolde.tv_recent_time
 				.setText(TimeUtil.getChatTime(contact.getTime()));
 		// 显示内容
-		System.out.println(contact.getMessage()+"adapter message");
+		System.out.println(contact.getMessage() + "adapter message");
 		if (contact.getType() == BmobConfig.TYPE_TEXT) {
 			viewHolde.tv_recent_msg.setText(contact.getMessage());
 		} else if (contact.getType() == BmobConfig.TYPE_IMAGE) {
@@ -83,7 +91,7 @@ public class RecentAdapter extends ArrayAdapter<BmobRecent> {
 		} else if (contact.getType() == BmobConfig.TYPE_VOICE) {
 			viewHolde.tv_recent_msg.setText("[语音]");
 		}
-		
+
 		int num = BmobDB.create(mContext).getUnreadCount(contact.getTargetid());
 		if (num > 0) {
 			viewHolde.tv_recent_unread.setVisibility(View.VISIBLE);

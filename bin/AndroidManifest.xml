@@ -7,6 +7,8 @@
     <uses-sdk
         android:minSdkVersion="14"
         android:targetSdkVersion="19" />
+    
+    
 
     <!-- UIL框架所需的权限 -->
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
@@ -83,10 +85,10 @@
     <uses-permission android:name="android.permission.BROADCAST_STICKY" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
 
-             <permission
+    <permission
         android:name="cn.bmob.permission.push"
         android:protectionLevel="normal" />
-    
+
     <application
         android:name="com.zgrjb.find.utils.CustomApplcation"
         android:allowBackup="true"
@@ -168,7 +170,7 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.zgrjb.find.ui.ShackActivity"
+            android:name="com.zgrjb.find.ui.ScannActivity"
             android:screenOrientation="portrait" >
         </activity>
         <activity
@@ -192,6 +194,18 @@
             android:name="com.zgrjb.find.ui.InitializeActivity"
             android:screenOrientation="portrait" >
         </activity>
+        <activity
+            android:name="com.zgrjb.find.ui.MyPaintActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.zgrjb.find.ui.RobotActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.zgrjb.find.ui.ShackActivity"
+            android:screenOrientation="portrait" >
+        </activity>
 
         <!-- IM聊天所需的Push start -->
         <service
@@ -204,8 +218,6 @@
                 <action android:name="cn.bmob.push.lib.service.PushService" />
             </intent-filter>
         </service>
-        
-
 
         <receiver android:name="cn.bmob.push.PushReceiver" >
             <intent-filter android:priority="2147483647" > <!-- 优先级加最高 -->
@@ -215,11 +227,6 @@
                 <action android:name="android.intent.action.USER_PRESENT" />
                 <!-- 监听网络连通性 -->
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-            </intent-filter>
-        </receiver>
-        <receiver android:name=".MapActivity" >
-            <intent-filter>
-                <action android:name="send" />
             </intent-filter>
         </receiver>
         <!-- 聊天消息接收器 -->
@@ -238,6 +245,7 @@
                 <action android:name="cn.bmob.im.service.BmobPollService" />
             </intent-filter>
         </service>
+        <activity android:name=".ui.RegistActivityV2"></activity>
     </application>
 
 </manifest>

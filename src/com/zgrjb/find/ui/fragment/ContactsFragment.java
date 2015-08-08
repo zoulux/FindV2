@@ -88,11 +88,12 @@ public class ContactsFragment extends Fragment {
 
 		// //////
 
-		 Map<String, BmobChatUser> users = CustomApplcation.getInstance().getContactList();
-		 Log.i("mm", users.size()+">>size");
-		 
-		 filledData(CollectionUtils.map2lists(users));
-	//	dealData();
+		Map<String, BmobChatUser> users = CustomApplcation.getInstance()
+				.getContactList();
+		Log.i("mm", users.size() + ">>size");
+
+		filledData(CollectionUtils.map2lists(users));
+		// dealData();
 
 		// ////
 
@@ -165,7 +166,6 @@ public class ContactsFragment extends Fragment {
 			mUser.setNick(chatUser.getNick());
 			mUser.setObjectId(chatUser.getObjectId());
 
-
 			list.add(mUser);
 
 		}
@@ -210,12 +210,11 @@ public class ContactsFragment extends Fragment {
 					int position, long id) {
 				Intent intent = new Intent(ContactsFragment.this.getActivity(),
 						FriendsDataActivity.class);
-
-				//
-
 				intent.putExtra("user", list.get(position));
-		//		Log.i("mm", list.get(position).getObjectId()+">>>ID");
+				intent.putExtra("isChat", false);
 				startActivity(intent);
+				ContactsFragment.this.getActivity().overridePendingTransition(
+						R.anim.zoom_enter, R.anim.zoom_exit);
 
 			}
 		});
@@ -299,59 +298,4 @@ public class ContactsFragment extends Fragment {
 		});
 
 	}
-
-	// private void recieveBroadcastAndDelete(){
-	//
-	// broadcastReceiver = new BroadcastReceiver() {
-	// @Override
-	// public void onReceive(Context context, Intent intent) {
-	// ContactsFragment.this.getActivity().finish();
-	// userManager.deleteContact(user.getObjectId(), new UpdateListener() {
-	//
-	// @Override
-	// public void onSuccess() {
-	// System.out.println("success");
-	// // É¾³ýÄÚ´æ
-	// CustomApplcation.getInstance().getContactList()
-	// .remove(user.getUsername());
-	// list.remove(user);
-	// list_friends.setSelection(list.size() - 1);
-	// contactAdapter.notifyDataSetChanged();
-	// }
-	//
-	// @Override
-	// public void onFailure(int arg0, String arg1) {
-	// System.out.println("fail");
-	// // TODO Auto-generated method stub
-	// Toast.makeText(getActivity(), "É¾³ýÊ§°Ü", Toast.LENGTH_SHORT)
-	// .show();
-	// }
-	// });
-	// }
-	// };
-	// broadcastManager.registerReceiver(broadcastReceiver, intentFilter);
-	// }
-
-	// @Override
-	// public void onAttach(Activity activity) {
-	// user = (MyUser)
-	// ContactsFragment.this.getActivity().getIntent().getSerializableExtra("user");
-	//
-	// // ×¢²á¹ã²¥
-	// IntentFilter intentFilter = new IntentFilter();
-	// intentFilter.addAction("senddelete");
-	// activity.registerReceiver(broadcastReceiver, intentFilter);
-	// recieveBroadcastAndDelete();
-	// super.onAttach(activity);
-	// }
-
-	// /**
-	// *×¢Ïú¹ã²¥
-	// * */
-	// @Override
-	// public void onDestroyView() {
-	// getActivity().unregisterReceiver(broadcastReceiver);
-	// super.onDestroyView();
-	// }
-
 }

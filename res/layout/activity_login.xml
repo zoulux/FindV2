@@ -66,8 +66,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="40dp"
                     android:layout_marginBottom="2dp"
+                    android:layout_marginTop="40dp"
                     android:layout_weight="4" >
 
                     <RelativeLayout
@@ -78,10 +78,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:src="@drawable/user" />
-
                     </RelativeLayout>
-
-                    
                 </LinearLayout>
 
                 <LinearLayout
@@ -97,10 +94,11 @@
                         android:layout_marginBottom="2dp"
                         android:layout_marginRight="10dp"
                         android:layout_marginTop="40dp"
-                        android:gravity="center"
                         android:background="@drawable/login_text_shape"
+                        android:gravity="center"
                         android:hint="请输入帐号"
                         android:inputType="textCapCharacters" >
+
                         <requestFocus />
                     </EditText>
                 </LinearLayout>
@@ -118,18 +116,15 @@
                     android:layout_marginBottom="40dp"
                     android:layout_marginTop="2dp"
                     android:layout_weight="4" >
-                    
+
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        
-                         >
+                        android:layout_height="match_parent" >
 
                         <ImageView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:src="@drawable/lock" />
-
                     </RelativeLayout>
                 </LinearLayout>
 
@@ -147,11 +142,9 @@
                         android:layout_marginRight="10dp"
                         android:layout_marginTop="2dp"
                         android:background="@drawable/login_text_shape"
-                        android:hint="请输入密码"
                         android:gravity="center"
-                        android:inputType="textPassword"/>
-
-                        
+                        android:hint="请输入密码"
+                        android:inputType="textPassword" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
@@ -165,10 +158,21 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1" >
+                android:layout_weight="1"
+                android:orientation="vertical" >
 
                 <Button
                     android:id="@+id/logInBt"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:background="@drawable/bt_login_shape"
+                    android:text="@string/login_bt_name" />
+
+                <Button
+                    android:id="@+id/bt_byqq"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginBottom="20dp"

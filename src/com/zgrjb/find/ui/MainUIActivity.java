@@ -89,7 +89,7 @@ public class MainUIActivity extends BaseActivity implements EventListener,
 	private RelativeLayout mainBg;// 为主界面设置背景
 
 	private BroadcastReceiver broadcastReceiver;// 定义一个广播接收者
-	private BroadcastReceiver broadcastReceiver2;
+	// private BroadcastReceiver broadcastReceiver2;
 
 	private SharePreferenceUtil shPreferenceUtil;// 定义一个共享工具类
 	private CustomApplcation mApplication;
@@ -132,6 +132,8 @@ public class MainUIActivity extends BaseActivity implements EventListener,
 		initColorSave();
 		initMenuSet();
 
+		rotateLeftMenuTitleBar();
+
 	}
 
 	private void initBmob() {
@@ -164,12 +166,19 @@ public class MainUIActivity extends BaseActivity implements EventListener,
 	}
 
 	/**
+	 * 当侧滑菜单时，齿轮顺时针或逆时针旋转，此方法只是传递参数的作用
+	 */
+	public void rotateLeftMenuTitleBar() {
+		mLeftmenu.rotating(LeftMenuTitleBar);
+	}
+
+	/**
 	 * 关闭或打开左菜单
 	 * 
 	 * @param view
 	 */
 	public void toggleMenu(View view) {
-		setLeftMenuAnimation(LeftMenuTitleBar, 0f, 360f, 500);
+		setLeftMenuAnimation(LeftMenuTitleBar, 0f, 180f, 500);
 		mLeftmenu.toggle();
 	}
 
@@ -220,13 +229,13 @@ public class MainUIActivity extends BaseActivity implements EventListener,
 
 		serviceFlag = new FileServiceFlag(this);
 
-		broadcastReceiver2 = new BroadcastReceiver() {
-
-			@Override
-			public void onReceive(Context arg0, Intent arg1) {
-				MainUIActivity.this.finish();
-			}
-		};
+		// broadcastReceiver2 = new BroadcastReceiver() {
+		//
+		// @Override
+		// public void onReceive(Context arg0, Intent arg1) {
+		// MainUIActivity.this.finish();
+		// }
+		// };
 
 		broadcastReceiver = new BroadcastReceiver() {
 
@@ -271,7 +280,7 @@ public class MainUIActivity extends BaseActivity implements EventListener,
 					radioGroup.setBackgroundResource(R.color.theme_bg_defualt);
 					acionbarBgLayout
 							.setBackgroundResource(R.color.theme_bg_titleBar);
-					mainBg.setBackgroundResource(R.color.theme_bgbg);
+					mainBg.setBackgroundResource(R.drawable.mainbg5);
 					// 保存颜色
 					saveThemeSet(COLOR_DEFUALT);
 					break;
@@ -316,7 +325,7 @@ public class MainUIActivity extends BaseActivity implements EventListener,
 				radioGroup.setBackgroundResource(R.color.theme_bg_defualt);
 				acionbarBgLayout
 						.setBackgroundResource(R.color.theme_bg_titleBar);
-				mainBg.setBackgroundResource(R.color.theme_bgbg);
+				mainBg.setBackgroundResource(R.drawable.mainbg5);
 				break;
 
 			}
@@ -333,9 +342,9 @@ public class MainUIActivity extends BaseActivity implements EventListener,
 		intentFilter.addAction("choiceIcon");
 		registerReceiver(broadcastReceiver, intentFilter);
 
-		IntentFilter intentFilter2 = new IntentFilter();
-		intentFilter2.addAction("send");
-		registerReceiver(broadcastReceiver2, intentFilter2);
+		// IntentFilter intentFilter2 = new IntentFilter();
+		// intentFilter2.addAction("send");
+		// registerReceiver(broadcastReceiver2, intentFilter2);
 
 		MyMessageReceiver.ehList.add(this);// 监听推送的消息
 		// 清空
@@ -364,6 +373,7 @@ public class MainUIActivity extends BaseActivity implements EventListener,
 			Intent intent = new Intent(MainUIActivity.this,
 					LeftMenuPersonalData.class);
 			startActivity(intent);
+			overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_exit);
 		} else if (v == quitBt) {
 			showLogoutBtDialog();
 		} else if (v == messageSetLayout) {
@@ -546,6 +556,7 @@ public class MainUIActivity extends BaseActivity implements EventListener,
 		CustomApplcation.getInstance().logout();
 		startActivity(new Intent(MainUIActivity.this, LogInActivity.class));
 		MainUIActivity.this.finish();
+		overridePendingTransition(R.anim.quit_zoom_enter, R.anim.quit_zoom_exit);
 	}
 
 	// 初始化PageItem
@@ -724,6 +735,9 @@ public class MainUIActivity extends BaseActivity implements EventListener,
 	public void onBackPressed() {
 		if (firstTime + 2000 > System.currentTimeMillis()) {
 			super.onBackPressed();
+
+			overridePendingTransition(R.anim.quit_zoom_enter,
+					R.anim.quit_zoom_exit);
 		} else {
 			ShowToast("再按一次退出程序");
 		}
@@ -772,9 +786,8 @@ public class MainUIActivity extends BaseActivity implements EventListener,
 
 	@Override
 	protected void onPause() {
-		// TODO Auto-generated method stub
 		super.onPause();
-	MyMessageReceiver.ehList.remove(this);
+		MyMessageReceiver.ehList.remove(this);// 取消监听推送的消息
 	}
 
 }

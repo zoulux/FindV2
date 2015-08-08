@@ -68,15 +68,23 @@ public class ChartAdapter extends BaseAdapter {
 
 	private MyUser friendUser;
 	// 将本地图片放在位图里
-	private Bitmap bmAvertar = BitmapFactory.decodeFile(ImgUir.ALBUM_PATH
-			+ "cut.jpg");
+
+	// private Bitmap bmAvertar = BitmapFactory.decodeFile(ImgUir.ALBUM_PATH
+	// + "cut.jpg");
+
 	DisplayImageOptions options = new DisplayImageOptions.Builder()
+			.bitmapConfig(Bitmap.Config.RGB_565)
 			.showImageForEmptyUri(R.drawable.ic_launcher)
-			.showImageOnFail(R.drawable.ic_launcher)
-			.resetViewBeforeLoading(true).cacheOnDisc(true).cacheInMemory(true)
-			.imageScaleType(ImageScaleType.EXACTLY)
-			.bitmapConfig(Bitmap.Config.RGB_565).considerExifParams(true)
-			.displayer(new FadeInBitmapDisplayer(300)).build();;
+			.showImageOnFail(R.drawable.ic_launcher).cacheInMemory(true)
+			.cacheOnDisc(true).build();
+
+	// DisplayImageOptions options = new DisplayImageOptions.Builder()
+	// .showImageForEmptyUri(R.drawable.ic_launcher)
+	// .showImageOnFail(R.drawable.ic_launcher)
+	// .resetViewBeforeLoading(true).cacheOnDisc(true).cacheInMemory(true)
+	// .imageScaleType(ImageScaleType.EXACTLY)
+	// .bitmapConfig(Bitmap.Config.RGB_565).considerExifParams(true)
+	// .displayer(new FadeInBitmapDisplayer(300)).build();;
 
 	private AnimateFirstDisplayListener animateFirstListener = new AnimateFirstDisplayListener();
 
@@ -119,11 +127,14 @@ public class ChartAdapter extends BaseAdapter {
 			public void onClick(View v) {
 				Intent intent = new Intent(mContext, FriendsDataActivity.class);
 				intent.putExtra("user", friendUser);
+				intent.putExtra("isChat",true);
 				mContext.startActivity(intent);
 			}
 		});
 
 	}
+	
+	
 
 	@SuppressLint("NewApi")
 	@Override
@@ -166,7 +177,7 @@ public class ChartAdapter extends BaseAdapter {
 				viewHolde.pb_upLoad = (ProgressBar) convertView
 						.findViewById(R.id.progress_load);
 				// 通过位图加载本地图片
-				viewHolde.iv_avatar.setImageBitmap(bmAvertar);
+				// viewHolde.iv_avatar.setImageBitmap(bmAvertar);
 
 			} else if (msgType == TYPE_RECEIVER_VOICE) {
 				convertView = mInflater.inflate(
@@ -214,7 +225,7 @@ public class ChartAdapter extends BaseAdapter {
 				viewHolde.pb_upLoad = (ProgressBar) convertView
 						.findViewById(R.id.progress_load);
 				// 通过位图加载本地图片
-				viewHolde.iv_avatar.setImageBitmap(bmAvertar);
+				// viewHolde.iv_avatar.setImageBitmap(bmAvertar);
 			} else if (msgType == TYPE_SEND_IMAGE) {
 				convertView = mInflater.inflate(R.layout.item_chat_sent_image,
 						parent, false);
@@ -232,7 +243,7 @@ public class ChartAdapter extends BaseAdapter {
 				viewHolde.pb_upLoad = (ProgressBar) convertView
 						.findViewById(R.id.progress_load);
 				// 通过位图加载本地图片
-				viewHolde.iv_avatar.setImageBitmap(bmAvertar);
+				// viewHolde.iv_avatar.setImageBitmap(bmAvertar);
 			} else if (msgType == TYPE_RECEIVER_IMAGE) {
 				convertView = mInflater.inflate(
 						R.layout.item_chat_received_image, parent, false);
@@ -265,7 +276,8 @@ public class ChartAdapter extends BaseAdapter {
 		} else {
 			ImageLoader.getInstance().displayImage(photo, viewHolde.iv_avatar,
 					ImageLoadOptions.getOptions(), animateFirstListener);
-			viewHolde.iv_avatar.setBackgroundResource(R.drawable.child);
+
+			// viewHolde.iv_avatar.setBackgroundResource(R.drawable.child);
 
 		}
 
@@ -293,7 +305,7 @@ public class ChartAdapter extends BaseAdapter {
 						|| message.getStatus() == BmobConfig.STATUS_SEND_SUCCESS) {
 					tv_voice_length.setVisibility(View.VISIBLE);
 					String length = content.split("&")[2];
-					tv_voice_length.setText(length + "\''");
+					tv_voice_length.setText(length + "\'");
 
 				} else {
 					viewHolde.tv_voiceLength.setVisibility(View.INVISIBLE);
@@ -340,8 +352,8 @@ public class ChartAdapter extends BaseAdapter {
 							});
 					downloadTask.execute(netUrl);
 				} else {
-		//			String length = content.split("&")[2]; // 会越界
-	//				tv_voice_length.setText(length + "\''");
+					// String length = content.split("&")[2]; // 会越界
+					// tv_voice_length.setText(length + "\''");
 				}
 			}
 

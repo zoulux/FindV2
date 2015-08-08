@@ -2,35 +2,61 @@ package com.zgrjb.find.ui;
 
 import java.io.File;
 import java.io.IOException;
-import com.zgrjb.find.R;
-import com.zgrjb.find.file_handle.HandlePicFile;
+
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.NumberPicker;
+import android.widget.NumberPicker.Formatter;
+import android.widget.NumberPicker.OnValueChangeListener;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 import cn.bmob.im.BmobUserManager;
+import cn.bmob.im.bean.BmobChatUser;
 import cn.bmob.v3.BmobInstallation;
+import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UpdateListener;
+import cn.bmob.v3.listener.UploadFileListener;
+
+import com.zgrjb.find.R;
 import com.zgrjb.find.bean.MyUser;
 import com.zgrjb.find.config.ImgUir;
+import com.zgrjb.find.file_handle.HandlePicFile;
+import com.zgrjb.find.utils.CircleImageDrawable;
 import com.zgrjb.find.utils.CommonUtils;
+import com.zgrjb.find.utils.FileServiceFlag;
 
 public class RegistActivity extends BaseActivity implements OnClickListener {
+	private RadioGroup sexGroup;// 定义一个radioGoup来判断性别
+	private RadioButton sexBoy, sexGirl;// 定义一个radioGoup来选择性别
+	private NumberPicker agePicker;// 定义一个NumberPicker来选择年龄
+	private boolean sex = true;// 性别为true时默认为男
+	private int age = 20;// 默认初始年龄为20岁
+	// 定义一个确定注册,取消注册的按钮
+	private Button ensureRegistButton, cancleRegistButton;
+
 	private EditText userName, nick, password, passwordAgain;// 定义用户民，昵称，密码，重复密码的editText
+
 	private BroadcastReceiver broadcastReceiver;
 
 	private String userNameString, nickString, passwordString,
@@ -46,50 +72,48 @@ public class RegistActivity extends BaseActivity implements OnClickListener {
 	// 定义的一个照片的位图
 	private Bitmap photo;
 
+	private FileServiceFlag fileService;
+
+	File file = new File("/sdcard/Find/Picture_Regist/");
+
 	@SuppressLint("SdCardPath")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_regist);
-		File file = new File("/sdcard/Find/Picture_Regist/");
 		if (!file.exists()) {
 			file.mkdirs();
 		}
 		init();
+		dealWithAvarter();
 		initBroadcast();
-		initRightTitleBarSet();
-
 	}
 
-	/**
-	 * 初始化标题栏右边的按钮和监听
-	 */
-	private void initRightTitleBarSet() {
-		setDrawablePath(getResources().getDrawable(R.drawable.jiantou));
-		rightButtonIsVisible(true);
-		showTitleText("注册");
-		rightImageView.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				if (isOk()) {
-					Intent intent = new Intent(RegistActivity.this,
-							RegistFinalActivity.class);
-					intent.putExtra("userNameString", userNameString);
-					intent.putExtra("nickString", nickString);
-					intent.putExtra("passwordString", passwordString);
-					startActivity(intent);
-
-				}
-
-			}
-		});
+	private void dealWithAvarter() {
+		Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
+				R.drawable.child);
+		imageView.setImageDrawable(new CircleImageDrawable(bitmap));
 	}
 
 	/**
 	 * 初始化id和监听
 	 */
 	public void init() {
+
+		sexBoy = (RadioButton) this.findViewById(R.id.id_regist_RaddioBoy);
+		sexGirl = (RadioButton) this.findViewById(R.id.id_regist_RaddioGirl);
+		agePicker = (NumberPicker) this.findViewById(R.id.id_regist_agePicker);
+		sexGroup = (RadioGroup) findViewById(R.id.id_regist_RadioGroup);
+
+		ensureRegistButton = (Button) this.findViewById(R.id.ensureRegist);
+		cancleRegistButton = (Button) this.findViewById(R.id.cancleRegist);
+		ensureRegistButton.setOnClickListener(this);
+		cancleRegistButton.setOnClickListener(this);
+
+		initRadioGroup();
+		initNumberPicker();
+
+		fileService = new FileServiceFlag(RegistActivity.this);
 		// ensureRegistButton = (Button) this.findViewById(R.id.ensureRegist);
 		linearLayout = (LinearLayout) this
 				.findViewById(R.id.LinerLayoutToImageView);
@@ -107,6 +131,54 @@ public class RegistActivity extends BaseActivity implements OnClickListener {
 		nick = (EditText) findViewById(R.id.id_regist_nick);
 		password = (EditText) findViewById(R.id.id_regist_ps);
 		passwordAgain = (EditText) findViewById(R.id.id_regist_psAgain);
+
+	}
+
+	private void initNumberPicker() {
+
+		agePicker.setMinValue(1);
+		agePicker.setMaxValue(99);
+		agePicker.setValue(20);
+		agePicker.getChildAt(0).setFocusable(false);
+
+		agePicker.setFormatter(new Formatter() {
+
+			@Override
+			public String format(int value) {
+				String tmpStr = String.valueOf(value);
+				if (value < 10) {
+					tmpStr = "0" + tmpStr;
+				}
+				return tmpStr;
+			}
+		});
+
+		agePicker.setOnValueChangedListener(new OnValueChangeListener() {
+
+			@Override
+			public void onValueChange(NumberPicker picker, int oldVal,
+					int newVal) {
+				age = newVal;
+
+			}
+		});
+
+	}
+
+	private void initRadioGroup() {
+		sexGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+			@Override
+			public void onCheckedChanged(RadioGroup group, int checkId) {
+				if (checkId == sexBoy.getId()) {
+					sex = true;
+				}
+				if (checkId == sexGirl.getId()) {
+					sex = false;
+				}
+
+			}
+		});
 
 	}
 
@@ -131,9 +203,7 @@ public class RegistActivity extends BaseActivity implements OnClickListener {
 			break;
 		case PHOTO_REQUEST_CUT:
 			if (data != null) {
-				Bitmap bmpBitmap = getBitmap(this, ImgUir.ALBUM_PATH
-						+ "cut.jpg");
-				imageView.setImageBitmap(bmpBitmap);
+
 				sentPicToNext(data);
 			}
 			break;
@@ -152,7 +222,118 @@ public class RegistActivity extends BaseActivity implements OnClickListener {
 			cameraintent.putExtra(MediaStore.EXTRA_OUTPUT,
 					Uri.fromFile(ImgUir.tempFile));
 			startActivityForResult(cameraintent, PHOTO_REQUEST_TAKEPHOTO);
+		} else if (v == ensureRegistButton) {
+			if (isOk()) {
+				registeToServer();
+			}
+
+		} else if (v == cancleRegistButton) {
+			Intent intent = new Intent(RegistActivity.this, LogInActivity.class);
+			intent.putExtra("failed", 0);
+			startActivity(intent);
+			finish();
+			overridePendingTransition(R.anim.quit_zoom_enter,
+					R.anim.quit_zoom_exit);
+
 		}
+
+	}
+
+	ProgressDialog progress;
+
+	private void registeToServer() {
+		SharedPreferences sharedPreferences = getSharedPreferences(
+				"RegistActivityV2", Context.MODE_PRIVATE); // 私有数据
+		Editor editor = sharedPreferences.edit();// 获取编辑器
+		editor.putBoolean("isCamera", false);
+		editor.commit();// 提交修改
+
+		progress = new ProgressDialog(RegistActivity.this);
+
+		final MyUser user = new MyUser();
+		user.setUsername(userNameString);
+		user.setNick(nickString);
+		user.setPassword(passwordString);
+		user.setSex(sex);
+		user.setAge(age);
+		user.setInstallId(BmobInstallation.getInstallationId(this));
+		user.setDeviceType("android");
+
+		progress.setMessage("正在注册...");
+		progress.setCanceledOnTouchOutside(false);
+		progress.show();
+		user.signUp(RegistActivity.this, new SaveListener() {
+			@Override
+			public void onSuccess() {
+				// ShowToast("注册成功");
+				BmobUserManager.getInstance(RegistActivity.this)
+						.bindInstallationForRegister(user.getUsername());
+				// 先上传头像文件
+				uploadAvatar();
+
+			}
+
+			@Override
+			public void onFailure(int arg0, String arg1) {
+				if (arg0 == 202) {
+
+					ShowToast("用户名已存在");
+				}
+				progress.dismiss();
+
+			}
+		});
+
+	}
+
+	protected void uploadAvatar() {
+		String filePath = ImgUir.ALBUM_PATH + "cut.jpg";
+
+		final BmobFile pFile = new BmobFile(new File(filePath));
+		pFile.upload(this, new UploadFileListener() {
+
+			@Override
+			public void onSuccess() {
+				String pathAvatar = pFile.getFileUrl(RegistActivity.this);
+				System.out.println("图像文件上传成功" + pathAvatar);
+				updateMyAvatar(pathAvatar);
+
+			}
+
+			@Override
+			public void onFailure(int arg0, String arg1) {
+				System.out.println(arg0 + ":" + arg1);
+
+			}
+		});
+
+	}
+
+	protected void updateMyAvatar(String path) {
+		MyUser user = new MyUser();
+		user.setAvatar(path);
+		user.update(RegistActivity.this, BmobChatUser.getCurrentUser
+
+		(RegistActivity.this).getObjectId(), new UpdateListener() {
+
+			@Override
+			public void onSuccess() {
+				progress.dismiss();
+				Intent intent = new Intent(RegistActivity.this,
+						MainUIActivity.class);
+				intent.putExtra("success", 1);
+				startActivity(intent);
+				finish();
+				overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_exit);
+
+			}
+
+			@Override
+			public void onFailure(int arg0, String arg1) {
+				// TODO Auto-generated method stub
+
+			}
+		});
 
 	}
 
@@ -162,10 +343,21 @@ public class RegistActivity extends BaseActivity implements OnClickListener {
 	 * @return
 	 */
 	private boolean isOk() {
+		SharedPreferences share = getSharedPreferences("RegistActivityV2",
+				Activity.MODE_PRIVATE);
+		boolean isCamera = share.getBoolean("isCamera", false);
+
+		System.out.println("isCamera>>>" + isCamera);
+
 		userNameString = userName.getText().toString();
 		nickString = nick.getText().toString();
 		passwordString = password.getText().toString();
 		passwordAgainString = passwordAgain.getText().toString();
+
+		if (!isCamera) {
+			ShowToast("请先拍摄头像");
+			return false;
+		}
 
 		if (TextUtils.isEmpty(userNameString)) {
 			ShowToast("请输入用户名");
@@ -265,10 +457,19 @@ public class RegistActivity extends BaseActivity implements OnClickListener {
 			} else {
 				try {
 					handleFile.savePictureFile(photo, "cut.jpg");
+
+					SharedPreferences sharedPreferences = getSharedPreferences(
+							"RegistActivityV2", Context.MODE_PRIVATE); // 私有数据
+					Editor editor = sharedPreferences.edit();// 获取编辑器
+					editor.putBoolean("isCamera", true);
+					editor.commit();// 提交修改
+
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				imageView.setImageBitmap(photo);
+				Bitmap bmpBitmap = getBitmap(this, ImgUir.ALBUM_PATH
+						+ "cut.jpg");
+				imageView.setImageDrawable(new CircleImageDrawable(bmpBitmap));
 			}
 
 		}
@@ -281,6 +482,12 @@ public class RegistActivity extends BaseActivity implements OnClickListener {
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction("finish_RegistActivity");
 		registerReceiver(broadcastReceiver, intentFilter);
+	}
+
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		overridePendingTransition(R.anim.quit_zoom_enter, R.anim.quit_zoom_exit);
 	}
 
 }

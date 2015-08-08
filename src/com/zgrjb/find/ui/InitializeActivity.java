@@ -23,11 +23,14 @@ public class InitializeActivity extends BaseActivity {
 				startActivity(new Intent(InitializeActivity.this,
 						LogInActivity.class));
 				finish();
+				overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_exit);
 
 			} else if (msg.what == 1) {
 				startActivity(new Intent(InitializeActivity.this,
 						MainUIActivity.class));
 				finish();
+				overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_exit);
+
 			}
 		};
 	};

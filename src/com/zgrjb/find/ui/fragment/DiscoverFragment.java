@@ -1,6 +1,8 @@
 package com.zgrjb.find.ui.fragment;
 
 import java.io.File;
+
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -8,7 +10,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -16,170 +21,121 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import com.zgrjb.find.R;
 import com.zgrjb.find.ui.ChoiceThemeActivity;
+import com.zgrjb.find.ui.MainUIActivity;
+import com.zgrjb.find.ui.RobotActivity;
+import com.zgrjb.find.ui.ScannActivity;
 import com.zgrjb.find.ui.ShackActivity;
 import com.zgrjb.find.ui.puzzle_game.TryToPrepareGame;
 import com.zgrjb.find.utils.FileServiceFlag;
+import com.zgrjb.find.view.InitView;
+import com.zgrjb.find.view.MenuView;
+import com.zgrjb.find.view.MenuView.onMenuItemClickListener;
 
-public class DiscoverFragment extends Fragment implements OnClickListener {
-	// 定义摇一摇选项
-	private LinearLayout shakeHandlLayout;
-	// 定义炫主题选项
-	private LinearLayout goodThemeLayout;
-	// 定义玩游戏选项
-	private LinearLayout playGameLayout;
-	// 定义rootView
-	private View rootView;
+public class DiscoverFragment extends Fragment {
+	private InitView initView;
+	private MenuView menuView;
+	private BroadcastReceiver broadcastReceiver2;
+
 	// 定义游戏难度系数
 	private int whatDiff;
 	// 定义dialog
 	private AlertDialog.Builder builder;
-	// 定义广播接收者来接收主题设置的广播
-	private BroadcastReceiver broadcastReceiver;
-
-	private final int COLOR_BLACK = 1;
-	private final int COLOR_GREEN = 2;
-	private final int COLOR_BLUE = 3;
-	private final int COLOR_PINK = 4;
-	private FileServiceFlag serviceFlag;
-
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-	}
-
-	/**
-	 * 初始话id和设置点击事件和接收到的广播来跟换主题
-	 */
-	private void init() {
-		shakeHandlLayout = (LinearLayout) rootView.findViewById(R.id.shackhand);
-		goodThemeLayout = (LinearLayout) rootView.findViewById(R.id.goodTheme);
-		playGameLayout = (LinearLayout) rootView.findViewById(R.id.playGame);
-		shakeHandlLayout.setOnClickListener(DiscoverFragment.this);
-		goodThemeLayout.setOnClickListener(DiscoverFragment.this);
-		playGameLayout.setOnClickListener(DiscoverFragment.this);
-		itemColorSet();
-		builder = new AlertDialog.Builder(DiscoverFragment.this.getActivity());
-		broadcastReceiver = new BroadcastReceiver() {
-
-			@Override
-			public void onReceive(Context context, Intent intent) {
-				int value = intent.getIntExtra("theme", 0);
-				switch (value) {
-				case 1:
-					shakeHandlLayout
-							.setBackgroundResource(R.color.theme_bg_black);
-					goodThemeLayout
-							.setBackgroundResource(R.color.theme_bg_black);
-					playGameLayout
-							.setBackgroundResource(R.color.theme_bg_black);
-					break;
-				case 2:
-					shakeHandlLayout
-							.setBackgroundResource(R.color.theme_bg_green);
-					goodThemeLayout
-							.setBackgroundResource(R.color.theme_bg_green);
-					playGameLayout
-							.setBackgroundResource(R.color.theme_bg_green);
-					break;
-				case 3:
-					shakeHandlLayout
-							.setBackgroundResource(R.color.theme_bg_blue);
-					goodThemeLayout
-							.setBackgroundResource(R.color.theme_bg_blue);
-					playGameLayout
-							.setBackgroundResource(R.color.theme_bg_blue);
-					break;
-				case 4:
-					shakeHandlLayout
-							.setBackgroundResource(R.color.theme_bg_pink);
-					goodThemeLayout
-							.setBackgroundResource(R.color.theme_bg_pink);
-					playGameLayout
-							.setBackgroundResource(R.color.theme_bg_pink);
-					break;
-				case 5:
-					shakeHandlLayout
-							.setBackgroundResource(R.color.theme_bg_defualt);
-					goodThemeLayout
-							.setBackgroundResource(R.color.theme_bg_defualt);
-					playGameLayout
-							.setBackgroundResource(R.color.theme_bg_defualt);
-					break;
-				}
-			}
-		};
-	}
-
-	/**
-	 * 选项颜色设置
-	 */
-	private void itemColorSet() {
-		File colorFile = new File(
-				"data/data/com.zgrjb.find/files/colorSave.txt");
-		if (colorFile.exists()) {
-			int color = Integer.parseInt(serviceFlag
-					.readContentFromFile("colorSave.txt"));
-			switch (color) {
-			case COLOR_BLACK:
-				shakeHandlLayout
-						.setBackgroundResource(R.color.theme_bg_black);
-				goodThemeLayout
-						.setBackgroundResource(R.color.theme_bg_black);
-				playGameLayout
-						.setBackgroundResource(R.color.theme_bg_black);
-				break;
-			case COLOR_GREEN:
-				shakeHandlLayout
-						.setBackgroundResource(R.color.theme_bg_green);
-				goodThemeLayout
-						.setBackgroundResource(R.color.theme_bg_green);
-				playGameLayout
-						.setBackgroundResource(R.color.theme_bg_green);
-				break;
-			case COLOR_BLUE:
-				shakeHandlLayout
-						.setBackgroundResource(R.color.theme_bg_blue);
-				goodThemeLayout
-						.setBackgroundResource(R.color.theme_bg_blue);
-				playGameLayout
-						.setBackgroundResource(R.color.theme_bg_blue);
-				break;
-			case COLOR_PINK:
-				shakeHandlLayout
-						.setBackgroundResource(R.color.theme_bg_pink);
-				goodThemeLayout
-						.setBackgroundResource(R.color.theme_bg_pink);
-				playGameLayout.setBackgroundResource(R.color.theme_bg_pink);
-				break;
-
-			}
-		}
-	}
+	// 定义四个选项的值
+	private final int SHACK_HAND = 0;
+	private final int GOOD_THEME = 1;
+	private final int PLAY_GAME = 2;
+	private final int TALK_TIME = 3;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		rootView = inflater.inflate(R.layout.main_ui_discover_fragment,
+		View rootView = inflater.inflate(R.layout.main_ui_discover_fragment,
 				container, false);
-		serviceFlag = new FileServiceFlag(DiscoverFragment.this.getActivity());
-		init();
+		initView = (InitView) rootView.findViewById(R.id.id_initView);
+		menuView = (MenuView) rootView.findViewById(R.id.id_spacialView);
+		builder = new AlertDialog.Builder(DiscoverFragment.this.getActivity());
+		menuView.GetValue(initView);
+		setItemListener();
+		broadcastReceiver2 = new BroadcastReceiver() {
 
+			@Override
+			public void onReceive(Context arg0, Intent arg1) {
+				whatDiff = 0;
+			}
+		};
 		return rootView;
 	}
 
-	@Override
-	public void onClick(View v) {
-		if (v == shakeHandlLayout) {
-			Intent intent = new Intent(DiscoverFragment.this.getActivity(),
-					ShackActivity.class);
-			startActivity(intent);
-		} else if (v == goodThemeLayout) {
-			Intent intent = new Intent(DiscoverFragment.this.getActivity(),
-					ChoiceThemeActivity.class);
-			startActivity(intent);
-		} else if (v == playGameLayout) {
-			showDialogToChoiceDifficult();
-		}
+	/**
+	 * 设置每个选项的监听事件
+	 */
+	private void setItemListener() {
+		menuView.setOnMenuItemClickListener(new onMenuItemClickListener() {
+
+			@Override
+			public void onClick(View view, int position) {
+				switch (position) {
+				case SHACK_HAND:
+					new Handler().postDelayed(new Runnable() {
+
+						@Override
+						public void run() {
+							Intent intent1 = new Intent(DiscoverFragment.this
+									.getActivity(), ShackActivity.class);
+							startActivity(intent1);
+							DiscoverFragment.this
+									.getActivity()
+									.overridePendingTransition(
+											R.anim.zoom_enter, R.anim.zoom_exit);
+
+						}
+					}, 200);
+
+					break;
+				case GOOD_THEME:
+					new Handler().postDelayed(new Runnable() {
+
+						@Override
+						public void run() {
+							Intent intent2 = new Intent(DiscoverFragment.this
+									.getActivity(), ChoiceThemeActivity.class);
+							startActivity(intent2);
+							DiscoverFragment.this
+									.getActivity()
+									.overridePendingTransition(
+											R.anim.zoom_enter, R.anim.zoom_exit);
+
+						}
+					}, 200);
+
+					break;
+				case PLAY_GAME:
+					new Handler().postDelayed(new Runnable() {
+
+						@Override
+						public void run() {
+							showDialogToChoiceDifficult();
+						}
+					}, 200);
+
+					break;
+				case TALK_TIME:
+					new Handler().postDelayed(new Runnable() {
+						public void run() {
+							startActivity(new Intent(DiscoverFragment.this
+									.getActivity(), RobotActivity.class));
+							DiscoverFragment.this
+									.getActivity()
+									.overridePendingTransition(
+											R.anim.zoom_enter, R.anim.zoom_exit);
+						}
+					}, 200);
+
+					break;
+
+				}
+			}
+		});
 	}
 
 	/**
@@ -208,6 +164,8 @@ public class DiscoverFragment extends Fragment implements OnClickListener {
 				intent.putExtra("diff", whatDiff + 6);
 				intent.putExtra("diffValue", hobby[whatDiff]);
 				DiscoverFragment.this.startActivity(intent);
+				DiscoverFragment.this.getActivity().overridePendingTransition(
+						R.anim.zoom_enter, R.anim.zoom_exit);
 
 			}
 		});
@@ -224,11 +182,10 @@ public class DiscoverFragment extends Fragment implements OnClickListener {
 	@Override
 	public void onResume() {
 		super.onResume();
-		// 注册广播
-		IntentFilter intentFilter = new IntentFilter();
-		intentFilter.addAction("choiceIcon");
-		DiscoverFragment.this.getActivity().registerReceiver(broadcastReceiver,
-				intentFilter);
+		IntentFilter intentFilter2 = new IntentFilter();
+		intentFilter2.addAction("send");
+		DiscoverFragment.this.getActivity().registerReceiver(
+				broadcastReceiver2, intentFilter2);
 	}
 
 }

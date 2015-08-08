@@ -26,7 +26,7 @@ public class BaseActivity extends FragmentActivity {
 
 	BmobUserManager userManager;
 	BmobChatManager chatManager;
-	CustomApplcation mApplication;
+	protected CustomApplcation mApplication;
 	// 定义titleBar中间的文字
 	private TextView textView;
 	// 定义titleBar左边的按钮

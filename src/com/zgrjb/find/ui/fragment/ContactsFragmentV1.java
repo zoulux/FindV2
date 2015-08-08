@@ -179,12 +179,15 @@ public class ContactsFragmentV1 extends Fragment {
 					int position, long id) {
 				Intent intent = new Intent(ContactsFragmentV1.this.getActivity(),
 						FriendsDataActivity.class);
-
+				
 				//
 
 				intent.putExtra("user", list.get(position));
 				Log.i("mm", list.get(position).toString());
 				startActivity(intent);
+//				ContactsFragment.this.getActivity().overridePendingTransition(
+//						R.anim.zoom_enter, R.anim.zoom_exit);
+
 
 			}
 		});

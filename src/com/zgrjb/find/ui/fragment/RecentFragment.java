@@ -1,5 +1,7 @@
 package com.zgrjb.find.ui.fragment;
 
+import java.util.List;
+
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
@@ -30,7 +32,7 @@ public class RecentFragment extends Fragment implements OnItemClickListener,
 		OnItemLongClickListener {
 
 	private ListView recentContact;
-	private RecentAdapter recentAdapter;
+	private RecentAdapter recentAdapter = null;
 	// 定义一个rootview
 	private View rootView;
 
@@ -84,8 +86,6 @@ public class RecentFragment extends Fragment implements OnItemClickListener,
 		user.setNick(contact.getNick());
 		user.setUsername(contact.getUserName());
 		user.setObjectId(contact.getTargetid());
-		
-		
 
 		System.out.println("contact.getUserName()" + contact.getUserName());
 		System.out.println("contact.getTargetid()" + contact.getTargetid());
@@ -93,6 +93,8 @@ public class RecentFragment extends Fragment implements OnItemClickListener,
 		Intent intent = new Intent(getActivity(), ChatActivity.class);
 		intent.putExtra("user", user);
 		startActivity(intent);
+		RecentFragment.this.getActivity().overridePendingTransition(
+				R.anim.zoom_enter, R.anim.zoom_exit);
 		// viewHolde.tv_recent_unread.setVisibility(View.GONE);
 	}
 
@@ -100,10 +102,40 @@ public class RecentFragment extends Fragment implements OnItemClickListener,
 		try {
 			getActivity().runOnUiThread(new Runnable() {
 				public void run() {
-					recentAdapter = new RecentAdapter(getActivity(),
-							R.layout.item_conversation, BmobDB.create(
-									getActivity()).queryRecents());
-					recentContact.setAdapter(recentAdapter);
+					System.out.println("size>>>"
+							+ BmobDB.create(getActivity()).queryRecents()
+									.size());
+
+					if (recentAdapter == null) {
+						recentAdapter = new RecentAdapter(getActivity(),
+								R.layout.item_conversation, BmobDB.create(
+										getActivity()).queryRecents());
+						recentContact.setAdapter(recentAdapter);
+						System.out.println("1>>");
+					} else {
+
+						List<BmobRecent> queryList = BmobDB.create(
+								getActivity()).queryRecents();
+						// recentAdapter = new RecentAdapter(getActivity(),
+						// R.layout.item_conversation, queryList);
+						//
+						// recentContact.setAdapter(recentAdapter);
+						recentAdapter.getmData().clear();
+						recentAdapter.getmData().addAll(queryList);
+						recentAdapter.notifyDataSetChanged();
+
+						// recentAdapter.setmData(recentAdapter.getmData().addAll(queryList));
+
+						// recentAdapter = (RecentAdapter) recentContact
+						// .getAdapter();
+						// recentContact.setAdapter(recentAdapter);
+
+						// recentAdapter.notifyDataSetChanged();
+
+						System.out.println("2>>" + recentAdapter.getCount());
+
+					}
+
 				}
 			});
 		} catch (Exception e) {

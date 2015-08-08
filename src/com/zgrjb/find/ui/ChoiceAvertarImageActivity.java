@@ -249,5 +249,10 @@ public class ChoiceAvertarImageActivity extends BaseActivity implements
 			ShowToast("ªÒ»°’’∆¨ ß∞‹");
 		}
 	}
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		overridePendingTransition(R.anim.quit_zoom_enter, R.anim.quit_zoom_exit);
+	}
 
 }

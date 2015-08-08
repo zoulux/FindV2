@@ -147,7 +147,8 @@ public class SlidingMenu extends HorizontalScrollView {
 	}
 
 	private boolean statement = true;
-
+	private ImageView leftMenuTitleBar;
+	private float rotation;
 	/**
 	 * 打开菜单
 	 */
@@ -199,6 +200,10 @@ public class SlidingMenu extends HorizontalScrollView {
 		}
 
 	}
+	
+	public void rotating(ImageView leftMenuTitleBar) {
+		this.leftMenuTitleBar = leftMenuTitleBar;
+}
 
 	/**
 	 * L就相当于getScrollX 滚动发生时就调用此方法
@@ -207,7 +212,7 @@ public class SlidingMenu extends HorizontalScrollView {
 	protected void onScrollChanged(int l, int t, int oldl, int oldt) {
 		super.onScrollChanged(l, t, oldl, oldt);
 		float scale = l * 1.0f / mMenuWidth; // 1~0
-
+		rotation = (1-scale)*360;
 		float rightScale = 0.7f + 0.3f * scale;
 		float leftScale = 1.0f - scale * 0.3f;
 		float leftAlpha = 0.6f + 0.4f * (1 - scale);
@@ -221,7 +226,7 @@ public class SlidingMenu extends HorizontalScrollView {
 		ViewHelper.setScaleX(mMenu, leftScale);
 		ViewHelper.setScaleY(mMenu, leftScale);
 		ViewHelper.setAlpha(mMenu, leftAlpha);
-
+		ViewHelper.setRotation(leftMenuTitleBar, rotation);
 	}
 
 }

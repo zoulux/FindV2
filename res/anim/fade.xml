@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 声明动画对象的透明度，本例使用渐入的方式，显示Activity
+
+            属性说明参照zoom_exit.xml -->
+
+<alpha xmlns:android="http://schemas.android.com/apk/res/android"
+
+       android:interpolator="@android:anim/accelerate_interpolator"
+
+       android:fromAlpha="0.0" android:toAlpha="1.0"
+
+       android:duration="@android:integer/config_longAnimTime" />
+
