@@ -2,9 +2,11 @@ package com.zgrjb.find.ui;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,6 +15,8 @@ import android.content.IntentFilter;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -36,21 +40,29 @@ import cn.bmob.im.BmobChatManager;
 import cn.bmob.im.bean.BmobInvitation;
 import cn.bmob.im.bean.BmobMsg;
 import cn.bmob.im.inteface.EventListener;
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.GetListener;
 
 import com.baidu.mapapi.SDKInitializer;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.zgrjb.find.R;
+import com.zgrjb.find.bean.MyUser;
 import com.zgrjb.find.ui.fragment.ContactsFragment;
 import com.zgrjb.find.ui.fragment.DiscoverFragment;
 import com.zgrjb.find.ui.fragment.RecentFragment;
 import com.zgrjb.find.utils.CustomApplcation;
 import com.zgrjb.find.utils.FileServiceFlag;
+import com.zgrjb.find.utils.ImageLoadOptions;
 import com.zgrjb.find.utils.MyMessageReceiver;
 import com.zgrjb.find.utils.SharePreferenceUtil;
+import com.zgrjb.find.view.AddAndScanView;
+import com.zgrjb.find.view.AddAndScanView.onRightTopBarMenuItemClickListener;
 
 public class MainUIActivity extends BaseActivity implements EventListener,
 		OnClickListener {
 	// 定义一个侧滑左菜单
-	private SlidingMenu mLeftmenu;
+	private static SlidingMenu mLeftmenu;
 	// 定义一个ArrayList来接收每个pageritems的id
 	private ArrayList<PagerItem> pagerItems;
 	private ViewPager viewPager;
@@ -67,6 +79,7 @@ public class MainUIActivity extends BaseActivity implements EventListener,
 	private int currentPage;
 	private RelativeLayout userSetLayout;// 用户资料设置的相对布局
 	private RelativeLayout messageSetLayout;// 接受消息通知的相对布局
+	private ImageView myAvartar;// 自己的头像
 	private RelativeLayout voiceSetLayout;// 声音的相对布局
 	private RelativeLayout vibrateSetLayout;// 震动的相对布局
 	private ImageView messageSetTrue;// 消息菜单打开图片
@@ -84,8 +97,9 @@ public class MainUIActivity extends BaseActivity implements EventListener,
 	private MediaPlayer mediaPlayer = new MediaPlayer();// 定义一个播放器，并分配空间
 	private AlertDialog.Builder builder;// 定义一个对话框
 	private ImageView LeftMenuTitleBar;// 定义一个TitleBar上的左边的按钮
+	private ImageView rightMenuTitleBar;// 定义一个TitleBar上的左边的按钮
 	private LinearLayout acionbarBgLayout;// 定义整个的TitleBar
-
+	private static AddAndScanView menu;
 	private RelativeLayout mainBg;// 为主界面设置背景
 
 	private BroadcastReceiver broadcastReceiver;// 定义一个广播接收者
@@ -108,6 +122,31 @@ public class MainUIActivity extends BaseActivity implements EventListener,
 
 	// 做边显示的用户昵称
 	private TextView tv_nick;
+	// 定义当前的user
+	private MyUser user;
+
+	// 初始化handler来接收当前的user
+	Handler mHandler = new Handler() {
+
+		public void handleMessage(Message msg) {
+
+			if (msg.what == 100) {
+
+				MyUser user = (MyUser) msg.obj;
+				Intent i = new Intent(MainUIActivity.this, ChatActivity.class);
+				i.putExtra("user", user);
+				startActivity(i);
+
+			} else {
+
+				user = (MyUser) msg.obj;
+				showYourAvatar();
+
+			}
+		};
+	};
+
+	private myRightBtHandler rightBtHandler;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -116,10 +155,17 @@ public class MainUIActivity extends BaseActivity implements EventListener,
 		setContentView(R.layout.main_ui_activity);
 
 		initBmob();
-
+		rightBtHandler = new myRightBtHandler();
 		mLeftmenu = (SlidingMenu) this.findViewById(R.id.id_menu);
+		menu = (AddAndScanView) findViewById(R.id.id_addAndScanView);
 		builder = new AlertDialog.Builder(this);
 		setDrawablePath(getResources().getDrawable(R.drawable.set));
+		setRightDrawablePath(getResources().getDrawable(R.drawable.set));
+		rightButtonIsVisible(true);
+		rightMenuTitleBar = rightImageView;
+		setRightTitleBarListener();
+		setItemListener();
+
 		leftButtonIsVisible(true);
 		LeftMenuTitleBar = leftImageView;
 		mApplication = CustomApplcation.getInstance();
@@ -133,6 +179,96 @@ public class MainUIActivity extends BaseActivity implements EventListener,
 		initMenuSet();
 
 		rotateLeftMenuTitleBar();
+
+		new Thread(new myRightBtThread()).start();
+
+	}
+
+	private void setRightTitleBarListener() {
+		rightMenuTitleBar.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// ShowToast(">>");
+				menu.toggleMenu(300);
+			}
+		});
+	}
+
+	/**
+	 * 设置每个选项的监听事件
+	 */
+	private void setItemListener() {
+		menu.setRightTopBarMenuItemClickListener(new onRightTopBarMenuItemClickListener() {
+
+			@Override
+			public void onClick(View v, int position) {
+				switch (position) {
+				case 0:
+					System.out.println(0 + ">>>>>");
+					Intent intent = new Intent(MainUIActivity.this,
+							CreateQrCodeActivity.class);
+					intent.putExtra("QrStringValue", user.getObjectId());
+
+					startActivity(intent);
+					overridePendingTransition(R.anim.fade, R.anim.hold);
+					break;
+				case 1:
+					System.out.println(1 + ">>>>>");
+					// ShowToast("1>>>>>");
+
+					Intent intent2 = new Intent(MainUIActivity.this,
+							CaptureActivity.class);
+					startActivityForResult(intent2, 0);
+					overridePendingTransition(R.anim.fade, R.anim.hold);
+					break;
+
+				}
+			}
+		});
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (resultCode == RESULT_OK) {
+			String result = data.getExtras().getString("result");
+			System.out.println(result);
+			query(result);
+		}
+	}
+
+	ProgressDialog mProgressDialog = null;
+
+	private void query(String userId) {
+		mProgressDialog = new ProgressDialog(MainUIActivity.this);
+		mProgressDialog.setCancelable(false);
+		mProgressDialog.setMessage("正在努力添加...");
+		mProgressDialog.setTitle("提示");
+		mProgressDialog.show();
+		BmobQuery<MyUser> bmobQuery = new BmobQuery<MyUser>();
+		bmobQuery.getObject(MainUIActivity.this, userId,
+				new GetListener<MyUser>() {
+
+					@Override
+					public void onSuccess(final MyUser user) {
+						mProgressDialog.dismiss();
+						new Thread() {
+							public void run() {
+								Message msg = new Message();
+								msg.obj = user;
+								msg.what = 100;
+								mHandler.sendMessage(msg);
+							};
+
+						}.start();
+					}
+
+					@Override
+					public void onFailure(int arg0, String arg1) {
+
+					}
+				});
 
 	}
 
@@ -172,6 +308,39 @@ public class MainUIActivity extends BaseActivity implements EventListener,
 		mLeftmenu.rotating(LeftMenuTitleBar);
 	}
 
+	public class myRightBtThread implements Runnable {
+
+		@Override
+		public void run() {
+			while (true) {
+				try {
+					Thread.sleep(100);
+				} catch (Exception e) {
+					// TODO: handle exception
+					e.printStackTrace();
+				}
+				// 从消息池中获取消息，如果没有消息，创建一个消息，如果有，则取出来消息携带数据，由handler发送
+				Message message = Message.obtain();
+				rightBtHandler.sendMessage(message);
+			}
+		}
+
+	}
+
+	public static class myRightBtHandler extends Handler {
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+
+			// System.out.println(menu.isOPenMenu()+"  "+mLeftmenu.isMove+">>>>>>>>");
+			if ((menu.isOPenMenu()) && (mLeftmenu.isMove)) {
+				menu.closeMenu();
+
+			}
+			mLeftmenu.isMove = false;
+		}
+	}
+
 	/**
 	 * 关闭或打开左菜单
 	 * 
@@ -188,11 +357,11 @@ public class MainUIActivity extends BaseActivity implements EventListener,
 	private void init() {
 
 		tv_nick = (TextView) findViewById(R.id.nickText);
-		tv_nick.setText(userManager.getCurrentUserName().toString());
 
 		userSetLayout = (RelativeLayout) this
 				.findViewById(R.id.main_ui_user_set_layout);
 		quitBt = (Button) this.findViewById(R.id.main_ui_quit_bt);
+		myAvartar = (ImageView) findViewById(R.id.id_frontAvartar);
 		messageSetTrue = (ImageView) this
 				.findViewById(R.id.main_ui_new_message_set_true);
 		voiceSetTrue = (ImageView) this
@@ -290,6 +459,20 @@ public class MainUIActivity extends BaseActivity implements EventListener,
 		};
 	}
 
+	private void showYourAvatar() {
+		String avatarPath = user.getAvatar();
+		setAvatar(avatarPath);
+	}
+
+	private void setAvatar(String avatarPath) {
+		if (avatarPath != null && !avatarPath.equals("")) {
+			ImageLoader.getInstance().displayImage(avatarPath, myAvartar,
+					ImageLoadOptions.getOptions());
+		} else {
+			myAvartar.setImageResource(R.drawable.default_head);
+		}
+	}
+
 	/**
 	 * 将以前保存的主题用文件记下来，下次直接读取上次设置的颜色
 	 */
@@ -333,10 +516,49 @@ public class MainUIActivity extends BaseActivity implements EventListener,
 
 	}
 
+	/**
+	 * 查询是当前的哪一个的用户
+	 */
+	private void queryCurrentUser() {
+
+		BmobQuery<MyUser> query = new BmobQuery<MyUser>();
+		query.addWhereEqualTo("objectId", userManager.getCurrentUserObjectId());
+		query.findObjects(this, new FindListener<MyUser>() {
+
+			@Override
+			public void onSuccess(List<MyUser> arg0) {
+
+				if (arg0.size() != 0) {
+					Message message = new Message();
+					message.obj = arg0.get(0);
+					mHandler.sendMessage(message);
+				}
+
+			}
+
+			@Override
+			public void onError(int arg0, String arg1) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+	};
+
 	@Override
 	protected void onResume() {
 		super.onResume();
+		// 创建一个线程来查询用户
+		new Thread() {
+			public void run() {
+
+				queryCurrentUser();
+			}
+		}.start();
+
 		// 注册广播
+
+		tv_nick.setText(userManager.getCurrentUser().getNick());
 
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction("choiceIcon");
@@ -554,7 +776,9 @@ public class MainUIActivity extends BaseActivity implements EventListener,
 	 */
 	private void logOut() {
 		CustomApplcation.getInstance().logout();
-		startActivity(new Intent(MainUIActivity.this, LogInActivity.class));
+		Intent intent = new Intent(MainUIActivity.this, LogInActivity.class);
+		intent.putExtra("user", user);
+		startActivity(intent);
 		MainUIActivity.this.finish();
 		overridePendingTransition(R.anim.quit_zoom_enter, R.anim.quit_zoom_exit);
 	}

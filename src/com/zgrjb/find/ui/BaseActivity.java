@@ -33,8 +33,8 @@ public class BaseActivity extends FragmentActivity {
 	public ImageView leftImageView;
 	// 定义titleBar右边的按钮
 	public ImageView rightImageView;
-	// 定义一个drawable
-	private Drawable drawable;
+	private Drawable Ldrawable;
+	private Drawable Rdrawable;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -106,7 +106,7 @@ public class BaseActivity extends FragmentActivity {
 		if (b) {
 			leftImageView = (ImageView) findViewById(R.id.leftImageView);
 			leftImageView.setVisibility(0);// 显示
-			leftImageView.setImageDrawable(drawable);
+			leftImageView.setImageDrawable(Ldrawable);
 
 		}
 
@@ -122,17 +122,25 @@ public class BaseActivity extends FragmentActivity {
 		if (b) {
 			rightImageView = (ImageView) findViewById(R.id.rightImageView);
 			rightImageView.setVisibility(0);// 显示
-			rightImageView.setImageDrawable(drawable);
+			rightImageView.setImageDrawable(Rdrawable);
 			// rightImageView.setImageResource(imageId);
 		}
 
 	}
 
 	/*
-	 * 设置drawable的路径
+	 * 设置右边drawable的路径
 	 */
 	public void setDrawablePath(Drawable drawable) {
-		this.drawable = drawable;
+		this.Ldrawable = drawable;
+	}
+	/**
+	 * 设置右边drawable的路径
+	 * 
+	 * @param drawable
+	 */
+	public void setRightDrawablePath(Drawable drawable) {
+		Rdrawable = drawable;
 	}
 
 	/**

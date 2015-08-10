@@ -7,8 +7,8 @@
     <uses-sdk
         android:minSdkVersion="14"
         android:targetSdkVersion="19" />
-    
-    
+
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
 
     <!-- UIL框架所需的权限 -->
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
@@ -84,6 +84,9 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.BROADCAST_STICKY" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    
+     <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <permission
         android:name="cn.bmob.permission.push"
@@ -206,7 +209,12 @@
             android:name="com.zgrjb.find.ui.ShackActivity"
             android:screenOrientation="portrait" >
         </activity>
-
+        <activity
+            android:name="com.zgrjb.find.ui.CreateQrCodeActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        
+        
         <!-- IM聊天所需的Push start -->
         <service
             android:name="cn.bmob.push.lib.service.PushService"
@@ -245,7 +253,35 @@
                 <action android:name="cn.bmob.im.service.BmobPollService" />
             </intent-filter>
         </service>
-        <activity android:name=".ui.RegistActivityV2"></activity>
+ 
+
+        <!-- 腾讯sdk -->
+        <activity
+            android:name="com.tencent.connect.common.AssistActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
+            android:name="com.tencent.tauth.AuthActivity"
+            android:launchMode="singleTask"
+            android:noHistory="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="tencent1104804412" />
+            </intent-filter>
+        </activity>
+        
+        <activity
+            android:name="com.zgrjb.find.ui.CaptureActivity"
+             android:configChanges="orientation|keyboardHidden"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            android:windowSoftInputMode="stateAlwaysHidden" 
+            android:screenOrientation="portrait" >
+            </activity>
     </application>
 
 </manifest>

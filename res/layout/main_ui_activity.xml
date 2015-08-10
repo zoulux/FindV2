@@ -104,5 +104,5 @@
             </LinearLayout>
         </LinearLayout>
     </com.zgrjb.find.ui.SlidingMenu>
-
+<include layout="@layout/add_and_scan_view" />
 </RelativeLayout>

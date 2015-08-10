@@ -523,16 +523,13 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
 	 */
 	@Override
 	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.edit_user_comment:// 点击文本输入框
+		int id = v.getId();
+		if (id == R.id.edit_user_comment) {// 点击文本输入框
 			mListView.setSelection(mListView.getCount() - 1);
-			break;
-
-		case R.id.btn_chat_add:// 添加按钮-显示图片、拍照
+		} else if (id == R.id.btn_chat_add) {// 添加按钮-显示图片、拍照
 			menuToggle(v);
 			hideSoftInputView();
-			break;
-		case R.id.btn_chat_voice:// 语音按钮
+		} else if (id == R.id.btn_chat_voice) {// 语音按钮
 			edit_user_comment.setVisibility(View.GONE);
 			btn_chat_voice.setVisibility(View.GONE);
 			btn_chat_keyboard.setVisibility(View.VISIBLE);
@@ -541,10 +538,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
 			btn_chat_add.setFocusable(false);
 			btn_chat_add.setAlpha(0.2f);
 			hideSoftInputView();
-			break;
-
-		case R.id.btn_chat_keyboard:// 键盘按钮，点击就弹出键盘并隐藏掉声音按钮
-			// showEditState(false);
+		} else if (id == R.id.btn_chat_keyboard) {// 键盘按钮，点击就弹出键盘并隐藏掉声音按钮
 			btn_chat_voice.setVisibility(View.VISIBLE);
 			btn_chat_keyboard.setVisibility(View.GONE);
 			btn_speak.setVisibility(View.GONE);
@@ -553,12 +547,9 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
 			btn_chat_add.setClickable(true);
 			btn_chat_add.setFocusable(true);
 			btn_chat_add.setAlpha(1.0f);
-			break;
-		case R.id.btn_chat_send:// 发送文本
+		} else if (id == R.id.btn_chat_send) {// 发送文本
 			sendTxt(edit_user_comment.getText().toString(), 0);
-			break;
-		case R.id.img_photo:// 发送拍照的照片
-
+		} else if (id == R.id.img_photo) {// 发送拍照的照片
 			imgPhotoToAni();
 			new Handler().postDelayed(new Runnable() {
 
@@ -572,8 +563,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
 					isOpen = false;
 				}
 			}, 500);
-			break;
-		case R.id.img_getalbum:// 发送相册里的照片
+		} else if (id == R.id.img_getalbum) {// 发送相册里的照片c
 			imgGetAlbumAni();
 			new Handler().postDelayed(new Runnable() {
 
@@ -587,8 +577,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
 					isOpen = false;
 				}
 			}, 500);
-			break;
-		case R.id.img_paint:// 发送
+		} else if (id == R.id.img_paint) {
 			imgPaintAni();
 
 			new Handler().postDelayed(new Runnable() {
@@ -604,7 +593,6 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
 					isOpen = false;
 				}
 			}, 500);
-			break;
 		}
 	}
 

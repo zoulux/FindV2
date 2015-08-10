@@ -31,6 +31,8 @@ public class SlidingMenu extends HorizontalScrollView {
 	private boolean once = false;
 	// 判断菜单是否打开
 	public boolean isOpen;
+	
+	public static boolean isMove;
 
 	public SlidingMenu(Context context) {
 		this(context, null);
@@ -211,6 +213,7 @@ public class SlidingMenu extends HorizontalScrollView {
 	@Override
 	protected void onScrollChanged(int l, int t, int oldl, int oldt) {
 		super.onScrollChanged(l, t, oldl, oldt);
+		isMove =true;
 		float scale = l * 1.0f / mMenuWidth; // 1~0
 		rotation = (1-scale)*360;
 		float rightScale = 0.7f + 0.3f * scale;

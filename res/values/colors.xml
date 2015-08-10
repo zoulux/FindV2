@@ -22,32 +22,29 @@
     <color name="color_bottom_text_press">#4f9ef6</color>
     <color name="text_gray">#969696</color>
     <color name="msg_chat_bg">#eceff4</color>
-    
     <color name="theme_bg_color">#f0f2f5</color>
     <color name="color_theme">#489cfa</color>
     <color name="c_f98800">#ed4e23</color>
-    
     <color name="dialog_color_title">#f82c22</color>
     <color name="guide_color">#898989</color>
-
     <color name="common_bg">#fcfcfc</color>
     <color name="main_fragment_gray">#E5E5E5</color>
-    
-    
-    <color name="transparent">#9000</color> 
-     <color name="theme_bg_blue">#4192D9</color> 
-      <color name="theme_bg_black">#323232</color> 
-      <color name="theme_bg_pink">#f27ea9</color> 
-      <color name="theme_bg_green">#48ff00</color> 
+    <color name="transparent">#9000</color>
+    <color name="theme_bg_blue">#4192D9</color>
+    <color name="theme_bg_black">#323232</color>
+    <color name="theme_bg_pink">#f27ea9</color>
+    <color name="theme_bg_green">#48ff00</color>
+    <color name="login_bg">#86c4bf</color>
+    <color name="login_bt_bg">#6ba09c</color>
+    <color name="title_bg">#456562</color>
+    <color name="theme_bg_defualt">#86c4bf</color>
+    <color name="theme_bg_titleBar">#6ba09c</color>
+    <color name="theme_bgbg">#646464</color>
+    <color name="viewfinder_frame">#ff000000</color>
+    <color name="viewfinder_laser">#ffff0000</color>
+    <color name="viewfinder_mask">#60000000</color>
+      <color name="result_view">#b0000000</color>
       
-      <color name="login_bg">#86c4bf</color> 
-       <color name="login_bt_bg">#6ba09c</color> 
-       <color name="title_bg">#456562</color>
-       <color name="theme_bg_defualt">#86c4bf</color> 
-       
-       <color name="theme_bg_titleBar">#6ba09c</color> 
-       
-       <color name="theme_bgbg">#646464</color> 
-    
-    
+        <color name="possible_result_points">#c0ffff00</color>  
+
 </resources>
