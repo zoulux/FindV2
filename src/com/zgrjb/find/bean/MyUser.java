@@ -13,8 +13,8 @@ public class MyUser extends BmobChatUser {
 	// installId设备id
 	// contacts好友列表
 
-//	private boolean sex;// 性别 男为true ，女为false
-//	private int age;
+	// private boolean sex;// 性别 男为true ，女为false
+	// private int age;
 	private Boolean sex;// 性别 男为true ，女为false
 	private Integer age;
 
@@ -25,6 +25,24 @@ public class MyUser extends BmobChatUser {
 	private String brand;
 	private String model;
 	private String sdkVersion;
+
+	private Boolean isQQ;
+
+	public Boolean getIsQQ() {
+		return isQQ;
+	}
+
+	public void setIsQQ(Boolean isQQ) {
+		this.isQQ = isQQ;
+	}
+
+	public void setSex(Boolean sex) {
+		this.sex = sex;
+	}
+
+	public void setAge(Integer age) {
+		this.age = age;
+	}
 
 	public String getBrand() {
 		return brand;

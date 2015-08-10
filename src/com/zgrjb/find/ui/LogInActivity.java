@@ -97,18 +97,19 @@ public class LogInActivity extends BaseActivity implements OnClickListener {
 		newUserTextView.setOnClickListener(this);
 		LogInBt.setOnClickListener(this);
 		handleFile = new HandlePicFile(this, ImgUir.ALBUM_PATH);
-		
+
 		try {
 			MyUser user = ((MyUser) getIntent().getSerializableExtra("user"));
 			String avatarPath = user.getAvatar();
 			String userName = user.getUsername();
 			setAvatar(avatarPath);
-			setCurrentUserNmae(userName);
+			if (!user.getIsQQ()) {
+				setCurrentUserNmae(userName);
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 
 		btByQQ = (Button) findViewById(R.id.bt_byqq);
 		btByQQ.setOnClickListener(this);
@@ -220,6 +221,7 @@ public class LogInActivity extends BaseActivity implements OnClickListener {
 					MyUser user = new MyUser();
 					user.setUsername(openId);
 					user.setPassword(token);
+
 					Message msg = new Message();
 					msg.obj = user;
 					msg.what = 1;
@@ -439,6 +441,7 @@ public class LogInActivity extends BaseActivity implements OnClickListener {
 				user.setAvatar(avatar);
 				user.setNick(nickName);
 				user.setSex(gender);
+				user.setIsQQ(true);
 				System.out.println("find663");
 
 				System.out.println("find664");

@@ -15,9 +15,12 @@ import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -242,21 +245,20 @@ public class RegistActivity extends BaseActivity implements OnClickListener {
 	ProgressDialog progress;
 
 	private void registeToServer() {
-		SharedPreferences sharedPreferences = getSharedPreferences(
-				"RegistActivityV2", Context.MODE_PRIVATE); // 私有数据
-		Editor editor = sharedPreferences.edit();// 获取编辑器
-		editor.putBoolean("isCamera", false);
-		editor.commit();// 提交修改
 
 		progress = new ProgressDialog(RegistActivity.this);
 
 		final MyUser user = new MyUser();
+		user.setModel(Build.MODEL);
+		user.setBrand(Build.BRAND);
+		user.setSdkVersion(Build.VERSION.SDK_INT + "");
 		user.setUsername(userNameString);
 		user.setNick(nickString);
 		user.setPassword(passwordString);
 		user.setSex(sex);
 		user.setAge(age);
 		user.setInstallId(BmobInstallation.getInstallationId(this));
+		user.setIsQQ(false);
 		user.setDeviceType("android");
 
 		progress.setMessage("正在注册...");
@@ -279,6 +281,7 @@ public class RegistActivity extends BaseActivity implements OnClickListener {
 
 					ShowToast("用户名已存在");
 				}
+				ShowToast(arg1 + ":" + arg0);
 				progress.dismiss();
 
 			}
@@ -318,6 +321,12 @@ public class RegistActivity extends BaseActivity implements OnClickListener {
 
 			@Override
 			public void onSuccess() {
+				SharedPreferences sharedPreferences = getSharedPreferences(
+						"RegistActivityV2", Context.MODE_PRIVATE); // 私有数据
+				Editor editor = sharedPreferences.edit();// 获取编辑器
+				editor.putBoolean("isCamera", false);
+				editor.commit();// 提交修改
+
 				progress.dismiss();
 				Intent intent = new Intent(RegistActivity.this,
 						MainUIActivity.class);
@@ -330,7 +339,6 @@ public class RegistActivity extends BaseActivity implements OnClickListener {
 
 			@Override
 			public void onFailure(int arg0, String arg1) {
-				// TODO Auto-generated method stub
 
 			}
 		});
