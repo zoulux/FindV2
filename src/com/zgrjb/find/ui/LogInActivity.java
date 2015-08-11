@@ -103,7 +103,7 @@ public class LogInActivity extends BaseActivity implements OnClickListener {
 			String avatarPath = user.getAvatar();
 			String userName = user.getUsername();
 			setAvatar(avatarPath);
-			if (user.getIsQQ()==null) {
+			if (user.getIsQQ() == null || !user.getIsQQ()) {
 				setCurrentUserNmae(userName);
 			}
 
