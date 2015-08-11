@@ -58,11 +58,11 @@ public class AddAndScanView extends ViewGroup {
 				switch (i) {
 				case 0:
 					cl = getMeasuredWidth() - childWidth;
-					ct = childHeight;
+					ct = childHeight+30;
 					break;
 				case 1:
 					cl = getMeasuredWidth() - childWidth;
-					ct = 2 * childHeight;
+					ct = 2 * childHeight+32;
 					break;
 				}
 				child.layout(cl, ct, cl + childWidth, ct + childHeight);

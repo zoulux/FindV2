@@ -158,21 +158,10 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical" >
+                android:layout_weight="1" >
 
                 <Button
                     android:id="@+id/logInBt"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginBottom="20dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:background="@drawable/bt_login_shape"
-                    android:text="@string/login_bt_name" />
-
-                <Button
-                    android:id="@+id/bt_byqq"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginBottom="20dp"
@@ -185,15 +174,34 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginRight="20dp"
                 android:layout_weight="4" >
 
-                <TextView
-                    android:id="@+id/newUserTextView"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="10dp"
-                    android:gravity="right"
-                    android:text="@string/login_new_user" />
+                    android:layout_height="match_parent" >
+
+                    <ImageView
+                        android:id="@+id/bt_byqq"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:paddingBottom="5dp"
+                        android:src="@drawable/find_friend_icon_tencent" />
+
+                    <TextView
+                        android:id="@+id/newUserTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:textSize="15sp"
+                        android:text="@string/login_new_user" />
+                    
+                </RelativeLayout>
+
+                
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

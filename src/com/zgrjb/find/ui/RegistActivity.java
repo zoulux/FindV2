@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -45,6 +46,7 @@ import com.zgrjb.find.R;
 import com.zgrjb.find.bean.MyUser;
 import com.zgrjb.find.config.ImgUir;
 import com.zgrjb.find.file_handle.HandlePicFile;
+import com.zgrjb.find.ui.dialog.MyCustomDialog;
 import com.zgrjb.find.utils.CircleImageDrawable;
 import com.zgrjb.find.utils.CommonUtils;
 import com.zgrjb.find.utils.FileServiceFlag;
@@ -68,6 +70,7 @@ public class RegistActivity extends BaseActivity implements OnClickListener {
 	private LinearLayout linearLayout;
 	private static final int PHOTO_REQUEST_TAKEPHOTO = 1;// 拍照
 	private static final int PHOTO_REQUEST_CUT = 2;// 结果
+	private static final int PHOTO_REQUEST_ALBUM = 3;// 相册
 	// 定义一个HandlePicFile类
 	private HandlePicFile handleFile;
 	// 定义一个注册的头像
@@ -210,6 +213,22 @@ public class RegistActivity extends BaseActivity implements OnClickListener {
 				sentPicToNext(data);
 			}
 			break;
+		case PHOTO_REQUEST_ALBUM:// 选择拍照时调用
+			if (data != null) {
+				Uri selectedImage = data.getData();
+				if (selectedImage != null) {
+					Cursor cursor = getContentResolver().query(
+							selectedImage, null, null, null, null);
+					cursor.moveToFirst();
+					int columnIndex = cursor.getColumnIndex("_data");
+					String localSelectPath = cursor.getString(columnIndex);
+					cursor.close();
+					startPhotoZoom(Uri.fromFile(new File(localSelectPath)));
+				}else{
+					System.out.println("空的》》》》》》》》》》》》》》》》》》》》》");
+				}
+			}
+			break;
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}
@@ -220,11 +239,42 @@ public class RegistActivity extends BaseActivity implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		if (v == linearLayout) {
-			Intent cameraintent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-			// 指定调用相机拍照后照片的储存路径
-			cameraintent.putExtra(MediaStore.EXTRA_OUTPUT,
-					Uri.fromFile(ImgUir.tempFile));
-			startActivityForResult(cameraintent, PHOTO_REQUEST_TAKEPHOTO);
+			MyCustomDialog dialog = new MyCustomDialog(this, "选择",
+					new MyCustomDialog.OnCustomDialogListener() {
+
+						@Override
+						public void back(int value) {
+							switch (value) {
+							case PHOTO_REQUEST_TAKEPHOTO:
+								Intent cameraintent = new Intent(
+										MediaStore.ACTION_IMAGE_CAPTURE);
+								// 指定调用相机拍照后照片的储存路径
+								cameraintent.putExtra(MediaStore.EXTRA_OUTPUT,
+										Uri.fromFile(ImgUir.tempFile));
+								startActivityForResult(cameraintent,
+										PHOTO_REQUEST_TAKEPHOTO);
+								break;
+
+							case PHOTO_REQUEST_ALBUM:
+								Intent intent;
+								if (Build.VERSION.SDK_INT < 19) {
+									intent = new Intent(
+											Intent.ACTION_GET_CONTENT);
+									intent.setType("image/*");
+								} else {
+									intent = new Intent(
+											Intent.ACTION_PICK,
+											android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+								}
+
+								startActivityForResult(intent,
+										PHOTO_REQUEST_ALBUM);
+								break;
+							}
+
+						}
+					});
+			dialog.show();
 		} else if (v == ensureRegistButton) {
 			if (isOk()) {
 				registeToServer();

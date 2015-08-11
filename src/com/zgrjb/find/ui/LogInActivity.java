@@ -59,7 +59,7 @@ public class LogInActivity extends BaseActivity implements OnClickListener {
 	// 定义一个相片的位图
 	private Bitmap photo;
 
-	private Button btByQQ;
+	private ImageView btByQQ;
 
 	private ProgressDialog progress = null;
 
@@ -103,7 +103,7 @@ public class LogInActivity extends BaseActivity implements OnClickListener {
 			String avatarPath = user.getAvatar();
 			String userName = user.getUsername();
 			setAvatar(avatarPath);
-			if (!user.getIsQQ()) {
+			if (user.getIsQQ()==null) {
 				setCurrentUserNmae(userName);
 			}
 
@@ -111,7 +111,7 @@ public class LogInActivity extends BaseActivity implements OnClickListener {
 			e.printStackTrace();
 		}
 
-		btByQQ = (Button) findViewById(R.id.bt_byqq);
+		btByQQ = (ImageView) findViewById(R.id.bt_byqq);
 		btByQQ.setOnClickListener(this);
 
 		// startAvertarAnimation();
@@ -221,6 +221,7 @@ public class LogInActivity extends BaseActivity implements OnClickListener {
 					MyUser user = new MyUser();
 					user.setUsername(openId);
 					user.setPassword(token);
+					user.setIsQQ(true);
 
 					Message msg = new Message();
 					msg.obj = user;

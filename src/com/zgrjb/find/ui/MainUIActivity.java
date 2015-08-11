@@ -160,7 +160,7 @@ public class MainUIActivity extends BaseActivity implements EventListener,
 		menu = (AddAndScanView) findViewById(R.id.id_addAndScanView);
 		builder = new AlertDialog.Builder(this);
 		setDrawablePath(getResources().getDrawable(R.drawable.set));
-		setRightDrawablePath(getResources().getDrawable(R.drawable.set));
+		setRightDrawablePath(getResources().getDrawable(R.drawable.add_friend));
 		rightButtonIsVisible(true);
 		rightMenuTitleBar = rightImageView;
 		setRightTitleBarListener();

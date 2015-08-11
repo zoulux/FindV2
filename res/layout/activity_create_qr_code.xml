@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" 
-    android:background="@android:color/background_light"
-    >
+    android:layout_height="match_parent"
+    android:background="@android:color/background_light" >
+    
+    <include layout="@layout/include_actionbar"/>
 
     <ImageView
         android:id="@+id/id_qr_codeImage"
@@ -11,15 +12,8 @@
         android:layout_height="400dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:src="@drawable/ic_launcher"
-         />
+        android:src="@drawable/ic_launcher" />
 
-    <ImageView
-        android:id="@+id/id_quit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:src="@drawable/icon_geo" />
+   
 
 </RelativeLayout>

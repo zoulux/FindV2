@@ -17,7 +17,6 @@ import com.zgrjb.find.zxing.encoding.EncodingHandler;
 
 public class CreateQrCodeActivity extends BaseActivity {
 	private ImageView QRCodeImg;
-	private ImageView quitBt;
 	private String QrValue;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +38,8 @@ public class CreateQrCodeActivity extends BaseActivity {
 
 	}
 	private void init() {
+			initActionBar();
+		
 		    Intent intent = getIntent();
 		    QRCodeImg = (ImageView) findViewById(R.id.id_qr_codeImage);
 		    QrValue = intent.getStringExtra("QrStringValue");
@@ -51,25 +52,26 @@ public class CreateQrCodeActivity extends BaseActivity {
 				
 			}
 			
-			quitBt = (ImageView) findViewById(R.id.id_quit);
-			setQuitBtListener();
-			
 	}
-	private void setQuitBtListener() {
-			quitBt.setOnClickListener(new OnClickListener() {
+	private void initActionBar() {
+		    showTitleText("ЖўЮЌТы");
+			setDrawablePath(getResources().getDrawable(R.drawable.back));
+			leftButtonIsVisible(true);
+			leftImageView.setOnClickListener(new OnClickListener() {
 				
 				@Override
-				public void onClick(View v) {
+				public void onClick(View arg0) {
 						CreateQrCodeActivity.this.finish();
 						overridePendingTransition(R.anim.fade, R.anim.hold);
 				}
 			});
 	}
+	
 	@Override
 	public void onBackPressed() {
 		
 		super.onBackPressed();
-		overridePendingTransition(R.anim.hold, R.anim.fade);
+		//overridePendingTransition(R.anim.fade, R.anim.hold);
 		
 	}
 }

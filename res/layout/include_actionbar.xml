@@ -18,8 +18,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:contentDescription="@string/app_name"
+            android:paddingLeft="10dp"
             android:onClick="toggleMenu"
-            android:visibility="invisible" />
+            android:visibility="invisible"
+            />
     </LinearLayout>
 
     <LinearLayout
