@@ -137,7 +137,22 @@ public class RegistActivity extends BaseActivity implements OnClickListener {
 		nick = (EditText) findViewById(R.id.id_regist_nick);
 		password = (EditText) findViewById(R.id.id_regist_ps);
 		passwordAgain = (EditText) findViewById(R.id.id_regist_psAgain);
+      
+		initLeftTitle();
+	}
+	
+	private void initLeftTitle() {
+		setDrawablePath(getResources().getDrawable(R.drawable.jiantou2));
+		leftButtonIsVisible(true);
+		leftImageView.setOnClickListener(new OnClickListener() {
 
+			@Override
+			public void onClick(View arg0) {
+				RegistActivity.this.finish();
+				overridePendingTransition(R.anim.quit_zoom_enter,
+						R.anim.quit_zoom_exit);
+			}
+		});
 	}
 
 	private void initNumberPicker() {

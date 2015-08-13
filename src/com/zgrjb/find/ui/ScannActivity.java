@@ -53,7 +53,8 @@ public class ScannActivity extends BaseActivity {
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
-		overridePendingTransition(R.anim.quit_zoom_enter, R.anim.quit_zoom_exit);
+		System.out.println("");
+		//overridePendingTransition(R.anim.quit_zoom_enter, R.anim.quit_zoom_exit);
 	}
 
 }

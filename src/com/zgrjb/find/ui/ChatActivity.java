@@ -177,6 +177,22 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
 		initXListView();
 		initVoiceView();
 		getBroadcastFromPaintActivity();
+		initLeftTitle();
+
+	}
+
+	private void initLeftTitle() {
+		setDrawablePath(getResources().getDrawable(R.drawable.jiantou2));
+		leftButtonIsVisible(true);
+		leftImageView.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				ChatActivity.this.finish();
+				overridePendingTransition(R.anim.quit_zoom_enter,
+						R.anim.quit_zoom_exit);
+			}
+		});
 	}
 
 	/**
@@ -289,7 +305,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener,
 
 				if (!CommonUtils.checkSdCard()) {
 					ShowToast("发送语音需要sdcard支持！");
-					return false;    
+					return false;
 				}
 				try {
 					if (shorToast != null) {

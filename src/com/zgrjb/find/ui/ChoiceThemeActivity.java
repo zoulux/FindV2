@@ -51,6 +51,9 @@ public class ChoiceThemeActivity extends BaseActivity implements
 		defualtTheme = (Button) this.findViewById(R.id.default_theme_bt);
 		defualtTheme.setOnClickListener(this);
 	}
+	
+	
+	
 
 	/**
 	 * ¼àÌıµÄÉèÖÃ

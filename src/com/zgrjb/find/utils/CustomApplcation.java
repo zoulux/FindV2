@@ -1,6 +1,7 @@
 package com.zgrjb.find.utils;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,8 +64,8 @@ public class CustomApplcation extends Application {
 		if (BmobUserManager.getInstance(getApplicationContext())
 				.getCurrentUser() != null) {
 			// 获取本地好友user list到内存,方便以后获取好友list
-		
-			contactList = CollectionUtils.list2map( BmobDB.create(
+
+			contactList = CollectionUtils.list2map(BmobDB.create(
 					getApplicationContext()).getContactList());
 		}
 
@@ -170,6 +171,16 @@ public class CustomApplcation extends Application {
 		BmobUserManager.getInstance(getApplicationContext()).logout();
 		setContactList(null);
 		setNearPeople(null);
+	}
+
+	List<MyUser> nearbyUser = new ArrayList<MyUser>();
+
+	public List<MyUser> getNearbyUser() {
+		return nearbyUser;
+	}
+
+	public void setNearbyUser(List<MyUser> nearbyUser) {
+		this.nearbyUser = nearbyUser;
 	}
 
 }

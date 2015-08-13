@@ -213,6 +213,10 @@
             android:name="com.zgrjb.find.ui.CreateQrCodeActivity"
             android:screenOrientation="portrait" >
         </activity>
+        <activity
+            android:name="com.zgrjb.find.ui.ShowUserListActivity"
+            android:screenOrientation="portrait" >
+        </activity>
         
         
         <!-- IM聊天所需的Push start -->

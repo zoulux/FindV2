@@ -1,17 +1,22 @@
 package com.zgrjb.find.ui;
 
+import java.io.Serializable;
 import java.util.List;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.Gravity;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.TextView;
 import cn.bmob.im.BmobChatManager;
 import cn.bmob.im.config.BmobConfig;
@@ -74,11 +79,14 @@ public class MapActivity extends BaseActivity {
 
 	// marker
 	Marker selectMarker;
-
+	List<MyUser> lists;
 	// Handlerœ‡πÿ
 	Handler handlerQuery = new Handler() {
 		public void handleMessage(android.os.Message msg) {
-			List<MyUser> lists = (List<MyUser>) msg.obj;
+			lists = (List<MyUser>) msg.obj;
+
+			mApplication.setNearbyUser(lists);
+
 			addOverlayConfig(lists);
 		};
 	};
@@ -128,11 +136,49 @@ public class MapActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_map);
-
+		initTitle();
 		initBD();
 		setClick();
 		builder = new AlertDialog.Builder(this);
 		builder2 = new AlertDialog.Builder(this);
+
+	}
+
+	private void initRightTitle() {
+		setRightDrawablePath(getResources().getDrawable(R.drawable.set));
+		rightButtonIsVisible(true);
+		rightImageView.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(MapActivity.this,
+						ShowUserListActivity.class);
+				// intent.putExtra("userList", (Serializable) lists);
+				startActivity(intent);
+				// MapActivity.this.finish();
+				overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_exit);
+			}
+		});
+	}
+
+	private void initLeftTitle() {
+		setDrawablePath(getResources().getDrawable(R.drawable.jiantou2));
+		leftButtonIsVisible(true);
+		leftImageView.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				MapActivity.this.finish();
+				overridePendingTransition(R.anim.quit_zoom_enter,
+						R.anim.quit_zoom_exit);
+			}
+		});
+	}
+
+	private void initTitle() {
+		showTitleText("µÿÕº");
+		initLeftTitle();
+		initRightTitle();
 
 	}
 
@@ -300,6 +346,17 @@ public class MapActivity extends BaseActivity {
 	@Override
 	protected void onResume() {
 		mMapView.onResume();
+
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction("deleteMyLocation");
+		registerReceiver(new BroadcastReceiver() {
+
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				MapActivity.this.finish();
+			}
+		}, intentFilter);
+
 		super.onResume();
 	}
 

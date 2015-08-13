@@ -35,7 +35,6 @@ import com.zgrjb.find.bean.MyUser;
 import com.zgrjb.find.utils.CircleImageDrawable;
 import com.zgrjb.find.utils.ImageLoadOptions;
 
-
 public class LeftMenuPersonalData extends BaseActivity implements
 		OnClickListener {
 	// 定义一个个人头像的layout
@@ -145,8 +144,9 @@ public class LeftMenuPersonalData extends BaseActivity implements
 	// 异步加载头像
 	private void setAvatar(String avatar) {
 		if (avatar != null && !avatar.equals("")) {
-			//File f = ImageLoader.getInstance().getDiscCache().get("");
-			//Bitmap b=ImageLoadOptions.getOptions().getDecodingOptions().inBitmap;
+			// File f = ImageLoader.getInstance().getDiscCache().get("");
+			// Bitmap
+			// b=ImageLoadOptions.getOptions().getDecodingOptions().inBitmap;
 			ImageLoader.getInstance().displayImage(avatar,
 					personalAvertarImageview, ImageLoadOptions.getOptions());
 		} else {
@@ -213,6 +213,21 @@ public class LeftMenuPersonalData extends BaseActivity implements
 		}
 		sexString[0] = "男";
 		sexString[1] = "女";
+		initLeftTitle();
+	}
+
+	private void initLeftTitle() {
+		setDrawablePath(getResources().getDrawable(R.drawable.jiantou2));
+		leftButtonIsVisible(true);
+		leftImageView.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				LeftMenuPersonalData.this.finish();
+				overridePendingTransition(R.anim.quit_zoom_enter,
+						R.anim.quit_zoom_exit);
+			}
+		});
 	}
 
 	/**
@@ -346,6 +361,7 @@ public class LeftMenuPersonalData extends BaseActivity implements
 
 		super.onActivityResult(requestCode, resultCode, data);
 	}
+
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();

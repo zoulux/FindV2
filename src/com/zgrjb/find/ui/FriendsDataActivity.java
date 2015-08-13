@@ -109,7 +109,7 @@ public class FriendsDataActivity extends BaseActivity {
 		init();
 		if (isTrue) {
 			btChat.setVisibility(View.GONE);
-		}else{
+		} else {
 			btChat.setVisibility(View.VISIBLE);
 		}
 	}
@@ -180,10 +180,9 @@ public class FriendsDataActivity extends BaseActivity {
 		// friend = (MyUser) getIntent().getSerializableExtra("user");
 		targetId = ((MyUser) getIntent().getSerializableExtra("user"))
 				.getObjectId();
-		
+
 		isTrue = intent.getBooleanExtra("isChat", false);
-	//	System.err.println(isTrue+">>>>>>>>>>>>>>");
-		
+		// System.err.println(isTrue+">>>>>>>>>>>>>>");
 
 	}
 
@@ -215,7 +214,21 @@ public class FriendsDataActivity extends BaseActivity {
 
 			}
 		});
+		initLeftTitle();
+	}
 
+	private void initLeftTitle() {
+		setDrawablePath(getResources().getDrawable(R.drawable.jiantou2));
+		leftButtonIsVisible(true);
+		leftImageView.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				FriendsDataActivity.this.finish();
+				overridePendingTransition(R.anim.quit_zoom_enter,
+						R.anim.quit_zoom_exit);
+			}
+		});
 	}
 
 	protected void chatUser() {
@@ -304,7 +317,7 @@ public class FriendsDataActivity extends BaseActivity {
 	public void onBackPressed() {
 		super.onBackPressed();
 		overridePendingTransition(R.anim.quit_zoom_enter, R.anim.quit_zoom_exit);
-	
+
 	}
 
 }
