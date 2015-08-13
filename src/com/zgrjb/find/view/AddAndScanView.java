@@ -1,5 +1,7 @@
 package com.zgrjb.find.view;
+
 import android.content.Context;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,10 +12,14 @@ import android.view.animation.AnimationSet;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 
+import com.zgrjb.find.utils.PxAndDpUtil;
+
 public class AddAndScanView extends ViewGroup {
 	private Status mCrurentStatus = Status.CLOSE;
 	private onRightTopBarMenuItemClickListener mRightTopBarMenuItemClickListener;
 	private boolean isOpen;
+	private Context context;
+
 	public enum Status {
 		OPEN, CLOSE;
 	};
@@ -33,7 +39,7 @@ public class AddAndScanView extends ViewGroup {
 
 	public AddAndScanView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-
+		this.context = context;
 	}
 
 	@Override
@@ -58,11 +64,11 @@ public class AddAndScanView extends ViewGroup {
 				switch (i) {
 				case 0:
 					cl = getMeasuredWidth() - childWidth;
-					ct = childHeight+30;
+					ct = PxAndDpUtil.dipTopx(context, 50) + 5;
 					break;
 				case 1:
 					cl = getMeasuredWidth() - childWidth;
-					ct = 2 * childHeight+32;
+					ct = childHeight + PxAndDpUtil.dipTopx(context, 50) + 10;
 					break;
 				}
 				child.layout(cl, ct, cl + childWidth, ct + childHeight);
@@ -143,41 +149,50 @@ public class AddAndScanView extends ViewGroup {
 				@Override
 				public void onClick(View v) {
 					mRightTopBarMenuItemClickListener.onClick(v, pos);
-					menuItemAnim(pos,duration);
+					menuItemAnim(pos, duration);
 					changeStatus();
-					isOpen=false;
+					isOpen = false;
 				}
 			});
 
 		}
 		changeStatus();
-		isOpen=!isOpen;
+		isOpen = !isOpen;
 	}
-	
-	public void closeMenu(){
-		
-			int childCount = getChildCount();
-			for (int i = 0; i < childCount; i++) {
-				final View child = getChildAt(i);
-				child.setVisibility(View.GONE);
-			}
-			changeStatus();
+
+	public void closeMenu() {
+		System.out.println(">>>>>close");
+		int childCount = getChildCount();
+		for (int i = 0; i < childCount; i++) {
+			final View child = getChildAt(i);
+			child.startAnimation(scaleSmallAnim(300));
+
 			isOpen = false;
-		
+			new Handler().postDelayed(new Runnable() {
+				public void run() {
+					child.setVisibility(View.GONE);
+					child.setClickable(false);
+					child.setFocusable(false);
+				}
+			}, 300);
+		}
+		changeStatus();
+
 	}
-	
-	public boolean isOPenMenu(){
+
+	public boolean isOPenMenu() {
 		return isOpen;
 	}
+
 	/**
 	 * 各个选项的动画
 	 * 
 	 * @param pos
 	 *            各个选项的位置
 	 */
-	private void menuItemAnim(int pos,int duration) {
+	private void menuItemAnim(int pos, int duration) {
 		for (int i = 0; i < getChildCount(); i++) {
-			View childView = getChildAt(i);
+			final View childView = getChildAt(i);
 			if (i == pos) {
 				childView.startAnimation(scaleBigAnim(300));
 
@@ -189,7 +204,7 @@ public class AddAndScanView extends ViewGroup {
 		}
 
 	}
-	
+
 	/*
 	 * 为当前点击的Item设置变大或变小和透明度的变化
 	 */

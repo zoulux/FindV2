@@ -19,12 +19,12 @@ public class MyPaintActivity extends BaseActivity {
 		setContentView(R.layout.activity_my_paint);
 		paintView = (MyPaintView) findViewById(R.id.id_my_paint_view);
 		initActionBar();
-
 	}
 
 	private void initActionBar() {
 		showTitleText("Ëæ±Ê»­");
-		setDrawablePath(getResources().getDrawable(R.drawable.chat_send_n));
+		setRightDrawablePath(getResources()
+				.getDrawable(R.drawable.chat_send_p1));
 		rightButtonIsVisible(true);
 		rightBt = rightImageView;
 
@@ -50,6 +50,7 @@ public class MyPaintActivity extends BaseActivity {
 		intent.putExtra("date", paintView.getDateString());
 		this.sendBroadcast(intent);
 	}
+
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();

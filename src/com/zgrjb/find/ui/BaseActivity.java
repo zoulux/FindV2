@@ -28,7 +28,7 @@ public class BaseActivity extends FragmentActivity {
 	BmobChatManager chatManager;
 	protected CustomApplcation mApplication;
 	// 定义titleBar中间的文字
-	private TextView textView;
+	private  TextView textView;
 	// 定义titleBar左边的按钮
 	public ImageView leftImageView;
 	// 定义titleBar右边的按钮
@@ -106,7 +106,8 @@ public class BaseActivity extends FragmentActivity {
 		if (b) {
 			leftImageView = (ImageView) findViewById(R.id.leftImageView);
 			leftImageView.setVisibility(0);// 显示
-			leftImageView.setImageDrawable(Ldrawable);
+			leftImageView.setBackground(Ldrawable);
+		//	leftImageView.setImageDrawable(Ldrawable);
 
 		}
 
@@ -123,6 +124,7 @@ public class BaseActivity extends FragmentActivity {
 			rightImageView = (ImageView) findViewById(R.id.rightImageView);
 			rightImageView.setVisibility(0);// 显示
 			rightImageView.setImageDrawable(Rdrawable);
+			//	rightImageView.setBackground(Rdrawable);
 			// rightImageView.setImageResource(imageId);
 		}
 

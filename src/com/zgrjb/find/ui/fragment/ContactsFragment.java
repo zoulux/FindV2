@@ -3,6 +3,8 @@ package com.zgrjb.find.ui.fragment;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.Inflater;
+
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.app.AlertDialog.Builder;
@@ -36,6 +38,7 @@ import com.zgrjb.find.bean.MyUser;
 import com.zgrjb.find.ui.FriendsDataActivity;
 import com.zgrjb.find.utils.CollectionUtils;
 import com.zgrjb.find.utils.CustomApplcation;
+import com.zgrjb.find.view.AddAndScanView;
 
 public class ContactsFragment extends Fragment {
 	// 定义一个rootView
@@ -175,7 +178,9 @@ public class ContactsFragment extends Fragment {
 	/**
 	 * 初始化View
 	 */
+
 	private void initView() {
+
 		list_friends = (ListView) rootView.findViewById(R.id.list_friends);
 		/*
 		 * 
@@ -208,11 +213,13 @@ public class ContactsFragment extends Fragment {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
+
 				Intent intent = new Intent(ContactsFragment.this.getActivity(),
 						FriendsDataActivity.class);
 				intent.putExtra("user", list.get(position));
 				intent.putExtra("isChat", false);
 				startActivity(intent);
+
 				ContactsFragment.this.getActivity().overridePendingTransition(
 						R.anim.zoom_enter, R.anim.zoom_exit);
 

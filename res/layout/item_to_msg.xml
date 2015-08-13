@@ -31,11 +31,13 @@
             android:textSize="16sp" />
 
         <LinearLayout
+            android:gravity="right"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
             <ImageView
+                
                 android:id="@+id/iv_robotImg"
                 android:layout_width="49dp"
                 android:layout_height="49dp"

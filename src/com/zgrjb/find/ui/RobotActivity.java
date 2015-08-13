@@ -95,7 +95,7 @@ public class RobotActivity extends BaseActivity {
 
 	private void initDates() {
 
-		userName = userManager.getCurrentUserName();
+		userName = userManager.getCurrentUser().getNick();
 
 		mDates = new ArrayList<ChatMessage>();
 		mDates.add(new ChatMessage("ÄãºÃ!", Type.INCOMING, new Date()));

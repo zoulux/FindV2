@@ -21,8 +21,7 @@ public class HttpUtils {
 	private static final String API_KEY = "65dceb266e67b766cf90568eae508d13";
 
 	/**
-	 * 发送一个消息
-	 * 返回一个消息
+	 * 发送一个消息 返回一个消息
 	 * 
 	 * */
 	public static ChatMessage sendMessage(String msg) {
@@ -33,12 +32,11 @@ public class HttpUtils {
 		Result result = null;
 		try {
 			result = gson.fromJson(jsonRes, Result.class);
-			System.out.println(result.getText()+">>>>");
-			message.setMsg(
-					result.getText());
-		} catch (JsonSyntaxException e) {
-			// TODO Auto-generated catch block
-			message.setMsg("服务器繁忙，稍后重试！");
+			System.out.println(result.getText() + ">>>>");
+			message.setMsg(result.getText());
+		} catch (Exception e) {
+
+			message.setMsg("服务器繁忙，稍后重试啊，么么哒！");
 		}
 		message.setDate(new Date());
 		message.setType(Type.INCOMING);

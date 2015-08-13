@@ -103,7 +103,6 @@ public class MainUIActivity extends BaseActivity implements EventListener,
 	private RelativeLayout mainBg;// 为主界面设置背景
 
 	private BroadcastReceiver broadcastReceiver;// 定义一个广播接收者
-	// private BroadcastReceiver broadcastReceiver2;
 
 	private SharePreferenceUtil shPreferenceUtil;// 定义一个共享工具类
 	private CustomApplcation mApplication;
@@ -181,6 +180,8 @@ public class MainUIActivity extends BaseActivity implements EventListener,
 		rotateLeftMenuTitleBar();
 
 		new Thread(new myRightBtThread()).start();
+		
+		
 
 	}
 
@@ -205,22 +206,28 @@ public class MainUIActivity extends BaseActivity implements EventListener,
 			public void onClick(View v, int position) {
 				switch (position) {
 				case 0:
-					System.out.println(0 + ">>>>>");
-					Intent intent = new Intent(MainUIActivity.this,
-							CreateQrCodeActivity.class);
-					intent.putExtra("QrStringValue", user.getObjectId());
+					new Handler().postDelayed(new Runnable() {
+						public void run() {
+							Intent intent = new Intent(MainUIActivity.this,
+									CreateQrCodeActivity.class);
+							intent.putExtra("QrStringValue", user.getObjectId());
 
-					startActivity(intent);
-					overridePendingTransition(R.anim.fade, R.anim.hold);
+							startActivity(intent);
+							overridePendingTransition(R.anim.fade, R.anim.hold);
+						}
+					}, 300);
+
 					break;
 				case 1:
-					System.out.println(1 + ">>>>>");
-					// ShowToast("1>>>>>");
+					new Handler().postDelayed(new Runnable() {
+						public void run() {
+							Intent intent2 = new Intent(MainUIActivity.this,
+									CaptureActivity.class);
+							startActivityForResult(intent2, 0);
+							overridePendingTransition(R.anim.fade, R.anim.hold);
+						}
+					}, 300);
 
-					Intent intent2 = new Intent(MainUIActivity.this,
-							CaptureActivity.class);
-					startActivityForResult(intent2, 0);
-					overridePendingTransition(R.anim.fade, R.anim.hold);
 					break;
 
 				}
@@ -233,7 +240,6 @@ public class MainUIActivity extends BaseActivity implements EventListener,
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == RESULT_OK) {
 			String result = data.getExtras().getString("result");
-			System.out.println(result);
 			query(result);
 		}
 	}
@@ -397,14 +403,6 @@ public class MainUIActivity extends BaseActivity implements EventListener,
 		vibrateSetLayout.setOnClickListener(this);
 
 		serviceFlag = new FileServiceFlag(this);
-
-		// broadcastReceiver2 = new BroadcastReceiver() {
-		//
-		// @Override
-		// public void onReceive(Context arg0, Intent arg1) {
-		// MainUIActivity.this.finish();
-		// }
-		// };
 
 		broadcastReceiver = new BroadcastReceiver() {
 

@@ -88,6 +88,7 @@ public class CaptureActivity extends Activity implements Callback {
 			@Override
 			public void onClick(View v) {
 				CaptureActivity.this.finish();
+				overridePendingTransition(R.anim.quit_zoom_enter, R.anim.quit_zoom_exit);
 			}
 		});
 	}

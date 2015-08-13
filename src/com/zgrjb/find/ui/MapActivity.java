@@ -10,6 +10,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.Gravity;
+import android.view.View;
 import android.widget.TextView;
 import cn.bmob.im.BmobChatManager;
 import cn.bmob.im.config.BmobConfig;
@@ -98,7 +100,8 @@ public class MapActivity extends BaseActivity {
 			TextView tv = new TextView(getApplicationContext());
 			tv.setBackgroundResource(R.drawable.popup);
 			tv.setTextColor(Color.parseColor("#333333"));
-			tv.setText(user.getUsername());
+			tv.setText(user.getNick());
+			tv.setGravity(Gravity.CENTER);
 			OnInfoWindowClickListener listener = null;
 			listener = new OnInfoWindowClickListener() {
 				public void onInfoWindowClick() {
