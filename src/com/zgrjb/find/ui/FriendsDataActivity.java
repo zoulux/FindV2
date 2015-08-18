@@ -109,8 +109,10 @@ public class FriendsDataActivity extends BaseActivity {
 		init();
 		if (isTrue) {
 			btChat.setVisibility(View.GONE);
+			btDelete.setVisibility(View.GONE);
 		} else {
 			btChat.setVisibility(View.VISIBLE);
+			btDelete.setVisibility(View.VISIBLE);
 		}
 	}
 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -201,7 +202,6 @@ public class ShowUserListActivity extends BaseActivity {
 
 		if (type.equals("all")) {
 			userList = mApplication.getNearbyUser();
-			ShowToast("1");
 			shareType = 0;
 
 		} else if (type.equals("girl")) {
@@ -213,7 +213,6 @@ public class ShowUserListActivity extends BaseActivity {
 				}
 			}
 			userList = mList;
-			ShowToast("2");
 			shareType = 2;
 		} else if (type.equals("boy")) {
 			List<MyUser> mList = new ArrayList<MyUser>();
@@ -224,7 +223,6 @@ public class ShowUserListActivity extends BaseActivity {
 				}
 			}
 			userList = mList;
-			ShowToast("3");
 			shareType = 1;
 		}
 
@@ -238,7 +236,8 @@ public class ShowUserListActivity extends BaseActivity {
 					@Override
 					public void onclic(View v, int pos) {
 						userNum = pos;
-						showDialogToChoiceDifficult();
+						showAlert();
+
 					}
 				});
 		// for (int i = 0; i < list.size(); i++) {
@@ -269,6 +268,24 @@ public class ShowUserListActivity extends BaseActivity {
 		// // });
 		// }
 		// });
+	}
+
+	protected void showAlert() {
+
+		AlertDialog.Builder builder = new Builder(ShowUserListActivity.this);
+		builder.setMessage("玩游戏才能添加好友哦！");
+		builder.setTitle("温馨提示");
+
+		builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+ 
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				showDialogToChoiceDifficult();
+			}
+		});
+		builder.setNegativeButton("取消", null);
+		builder.show();
+
 	}
 
 	private void setData() {

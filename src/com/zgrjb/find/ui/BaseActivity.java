@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,7 +29,7 @@ public class BaseActivity extends FragmentActivity {
 	BmobChatManager chatManager;
 	protected CustomApplcation mApplication;
 	// 定义titleBar中间的文字
-	private  TextView textView;
+	private TextView textView;
 	// 定义titleBar左边的按钮
 	public ImageView leftImageView;
 	// 定义titleBar右边的按钮
@@ -107,7 +108,7 @@ public class BaseActivity extends FragmentActivity {
 			leftImageView = (ImageView) findViewById(R.id.leftImageView);
 			leftImageView.setVisibility(0);// 显示
 			leftImageView.setBackground(Ldrawable);
-		//	leftImageView.setImageDrawable(Ldrawable);
+			// leftImageView.setImageDrawable(Ldrawable);
 
 		}
 
@@ -120,12 +121,14 @@ public class BaseActivity extends FragmentActivity {
 	 */
 	@SuppressLint("NewApi")
 	public void rightButtonIsVisible(boolean b) {
+		rightImageView = (ImageView) findViewById(R.id.rightImageView);
+		rightImageView.setImageDrawable(Rdrawable);
 		if (b) {
-			rightImageView = (ImageView) findViewById(R.id.rightImageView);
-			rightImageView.setVisibility(0);// 显示
-			rightImageView.setImageDrawable(Rdrawable);
-			//	rightImageView.setBackground(Rdrawable);
+			rightImageView.setVisibility(View.VISIBLE);// 显示
+			// rightImageView.setBackground(Rdrawable);
 			// rightImageView.setImageResource(imageId);
+		} else {
+			rightImageView.setVisibility(View.INVISIBLE);// 显示
 		}
 
 	}
@@ -136,6 +139,7 @@ public class BaseActivity extends FragmentActivity {
 	public void setDrawablePath(Drawable drawable) {
 		this.Ldrawable = drawable;
 	}
+
 	/**
 	 * 设置右边drawable的路径
 	 * 

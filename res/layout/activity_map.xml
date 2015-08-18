@@ -4,12 +4,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
+    <include
+        android:id="@+id/id_map_title"
+        layout="@layout/include_actionbar" />
+
     <com.baidu.mapapi.map.MapView
         android:id="@+id/id_map_bdmap"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:layout_below="@id/id_map_title"
         android:clickable="true" />
-
-    <include layout="@layout/include_actionbar" />
 
 </RelativeLayout>

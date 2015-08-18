@@ -180,8 +180,6 @@ public class MainUIActivity extends BaseActivity implements EventListener,
 		rotateLeftMenuTitleBar();
 
 		new Thread(new myRightBtThread()).start();
-		
-		
 
 	}
 
@@ -272,6 +270,8 @@ public class MainUIActivity extends BaseActivity implements EventListener,
 
 					@Override
 					public void onFailure(int arg0, String arg1) {
+						ShowToast("请核对正确的二维码");
+						mProgressDialog.dismiss();
 
 					}
 				});

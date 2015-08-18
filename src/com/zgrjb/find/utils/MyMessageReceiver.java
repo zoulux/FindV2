@@ -256,9 +256,8 @@ public class MyMessageReceiver extends BroadcastReceiver {
 			trueMsg = msg.getContent();
 		}
 
-		CharSequence tickerText = msg.getBelongNick() + ":" + trueMsg;
-		String contentTitle = msg.getBelongUsername() + " (" + mNewNum
-				+ "条新消息)";
+		CharSequence tickerText = trueMsg;
+		String contentTitle = msg.getBelongNick() + " (" + mNewNum + "条新消息)";
 
 		Intent intent = new Intent(context, MainUIActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP); // 如果当前栈顶的activity就是要启动的activity,则不会再启动一个新的activity

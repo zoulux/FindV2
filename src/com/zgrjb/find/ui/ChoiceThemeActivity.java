@@ -39,6 +39,7 @@ public class ChoiceThemeActivity extends BaseActivity implements
 	 * 初始化
 	 */
 	private void init() {
+		showTitleText("主题");
 		blackThemeBt = (Button) this.findViewById(R.id.black_theme_bt);
 		blackThemeBt.setOnClickListener(this);
 		greenThemeBt = (Button) this.findViewById(R.id.green_theme_bt);
@@ -50,10 +51,8 @@ public class ChoiceThemeActivity extends BaseActivity implements
 		dialog = new MyDialog(this);
 		defualtTheme = (Button) this.findViewById(R.id.default_theme_bt);
 		defualtTheme.setOnClickListener(this);
+		initLeftTitle();
 	}
-	
-	
-	
 
 	/**
 	 * 监听的设置
@@ -77,5 +76,19 @@ public class ChoiceThemeActivity extends BaseActivity implements
 	public void onBackPressed() {
 		super.onBackPressed();
 		overridePendingTransition(R.anim.quit_zoom_enter, R.anim.quit_zoom_exit);
+	}
+
+	private void initLeftTitle() {
+		setDrawablePath(getResources().getDrawable(R.drawable.jiantou2));
+		leftButtonIsVisible(true);
+		leftImageView.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				ChoiceThemeActivity.this.finish();
+				overridePendingTransition(R.anim.quit_zoom_enter,
+						R.anim.quit_zoom_exit);
+			}
+		});
 	}
 }

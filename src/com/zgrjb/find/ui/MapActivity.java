@@ -62,7 +62,7 @@ public class MapActivity extends BaseActivity {
 	private LocationClient mLocClient;
 	private MyLocationListenner myListener = new MyLocationListenner();
 	private BDLocation lastLocation = null;
-	private double QUERY_KILOMETERS = 100;
+	private double QUERY_KILOMETERS = 1;
 	private boolean isFirstLoc = true;
 	private BitmapDescriptor bdicon = BitmapDescriptorFactory
 			.fromResource(R.drawable.icon_gcoding);
@@ -85,6 +85,8 @@ public class MapActivity extends BaseActivity {
 		public void handleMessage(android.os.Message msg) {
 			lists = (List<MyUser>) msg.obj;
 
+			initRightTitle();
+			
 			mApplication.setNearbyUser(lists);
 
 			addOverlayConfig(lists);
@@ -97,11 +99,11 @@ public class MapActivity extends BaseActivity {
 			String userName = (String) msg.obj;
 
 			user = mApplication.getNearPeople().get(userName);
-			System.out.println(user.getUsername()
-					+ "getUsername+?????????????????");
-			System.out.println(user.getNick() + "getNick+????????????????????");
-			System.out.println(user.getAvatar()
-					+ "getAvatar+??????????????????????");
+//			System.out.println(user.getUsername()
+//					+ "getUsername+?????????????????");
+//			System.out.println(user.getNick() + "getNick+????????????????????");
+//			System.out.println(user.getAvatar()
+//					+ "getAvatar+??????????????????????");
 
 			LatLng ll = selectMarker.getPosition();
 
@@ -145,7 +147,7 @@ public class MapActivity extends BaseActivity {
 	}
 
 	private void initRightTitle() {
-		setRightDrawablePath(getResources().getDrawable(R.drawable.set));
+		setRightDrawablePath(getResources().getDrawable(R.drawable.maplist));
 		rightButtonIsVisible(true);
 		rightImageView.setOnClickListener(new OnClickListener() {
 
@@ -178,7 +180,7 @@ public class MapActivity extends BaseActivity {
 	private void initTitle() {
 		showTitleText("µØÍ¼");
 		initLeftTitle();
-		initRightTitle();
+//		initRightTitle();
 
 	}
 
@@ -348,6 +350,7 @@ public class MapActivity extends BaseActivity {
 		mMapView.onResume();
 
 		IntentFilter intentFilter = new IntentFilter();
+
 		intentFilter.addAction("deleteMyLocation");
 		registerReceiver(new BroadcastReceiver() {
 
